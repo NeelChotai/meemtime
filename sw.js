@@ -1,8 +1,13 @@
-const CACHE_NAME = 'stay-timer-v1';
+const CACHE_NAME = 'meemtime-v2';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json'
+  './',
+  './index.html',
+  './css/styles.css',
+  './js/app.js',
+  './js/timer-logic.js',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {

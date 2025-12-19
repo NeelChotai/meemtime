@@ -4,7 +4,7 @@ import {
     calculateSuccessTarget,
     calculateFailTarget,
     TimerSession
-} from './timer-logic.js';
+} from '../js/timer-logic.js';
 
 describe('calculateNextTarget', () => {
     it('returns exact base when random is 0', () => {

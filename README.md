@@ -1,4 +1,4 @@
-# Stay Timer
+# meemtime
 
 A PWA interval timer for dog training. Helps build duration on "stay" commands with progressive intervals and randomized variance.
 
@@ -7,6 +7,7 @@ A PWA interval timer for dog training. Helps build duration on "stay" commands w
 - **Progressive intervals**: Each round adds time to the previous target
 - **Upward variance**: 0-20% random variance keeps training unpredictable
 - **Fail recovery**: Resets to last successful duration, then continues
+- **Pause support**: Pause mid-round and resume from the same point
 - **Session tracking**: Round history, session timer, next target preview
 - **Offline support**: Works without internet after first load
 - **Mobile-first**: Designed for use during training sessions
@@ -17,7 +18,8 @@ A PWA interval timer for dog training. Helps build duration on "stay" commands w
 2. Set your interval increment (how much to add each round)
 3. Press "Start Training"
 4. Timer counts down - when it hits zero, the next round starts automatically
-5. Press "Fail" if the dog breaks, then "Start" to resume at the last successful duration
+5. Press "Pause" to temporarily stop (resumes from same point)
+6. Press "Fail" if the dog breaks, then "Resume" to restart at the last successful duration
 
 ## Development
 
@@ -32,7 +34,10 @@ Static files - deploy to any static host. For GitHub Pages, enable Pages in repo
 
 Files needed for production:
 - `index.html`
+- `css/styles.css`
+- `js/app.js`
+- `js/timer-logic.js`
 - `manifest.json`
 - `sw.js`
-- `icon-192.png`
-- `icon-512.png`
+- `icons/icon-192.png`
+- `icons/icon-512.png`
