@@ -30,6 +30,7 @@ const buttonRow = document.getElementById('button-row');
 const failBtn = document.getElementById('fail-btn');
 const pauseBtn = document.getElementById('pause-btn');
 const resumeBtn = document.getElementById('resume-btn');
+const failMessage = document.getElementById('fail-message');
 const startTrainingBtn = document.getElementById('start-training');
 const endSessionBtn = document.getElementById('end-session');
 const sessionTimerDisplay = document.getElementById('session-timer');
@@ -131,6 +132,11 @@ function setFlashColor(color) {
 function setVibrate(enabled) {
     vibrateEnabled = enabled;
     localStorage.setItem('meemtime-vibrate', enabled ? 'true' : 'false');
+
+    // Provide immediate feedback when enabling
+    if (enabled && navigator.vibrate) {
+        navigator.vibrate(50);
+    }
 }
 
 function loadSettings() {
@@ -214,12 +220,18 @@ function updateTimer() {
 function showActiveButtons() {
     buttonRow.classList.remove('hidden');
     resumeBtn.classList.add('hidden');
+    failMessage.classList.add('hidden');
 }
 
 // Show resume button (after pause or fail)
-function showResumeState() {
+function showResumeState(afterFail = false) {
     buttonRow.classList.add('hidden');
     resumeBtn.classList.remove('hidden');
+    if (afterFail) {
+        failMessage.classList.remove('hidden');
+    } else {
+        failMessage.classList.add('hidden');
+    }
 }
 
 // Start training
@@ -303,11 +315,12 @@ function handleFail() {
     currentTargetMs = lastCompletedTarget > 0 ? lastCompletedTarget : baselineMs;
     updateNextTargetPreview();
 
+    failMessage.textContent = `Dog broke. Back to ${formatTime(currentTargetMs)}.`;
     targetDisplay.textContent = formatTime(currentTargetMs);
     countdown.textContent = formatTime(currentTargetMs);
     countdownMs.textContent = '.00';
 
-    showResumeState();
+    showResumeState(true);
 }
 
 // Resume after pause or fail
