@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Stay Timer</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg: #1a1a1a;
+            --surface: #252525;
+            --text: #f0f0f0;
+            --text-dim: #888;
+            --accent: #4ade80;
+            --fail: #ef4444;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            height: 100dvh;
+        }
+
+        /* Flash overlay */
+        .flash {
+            position: fixed;
+            inset: 0;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .flash.active {
+            animation: flash 0.6s ease-out;
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 0; }
+            10%, 30%, 50% { opacity: 1; }
+            20%, 40% { opacity: 0; }
+        }
+
+        /* Setup Screen */
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            padding: 2rem;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        .setup-screen {
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .time-inputs {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .time-input {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .time-input input {
+            width: 5rem;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            text-align: center;
+            background: var(--surface);
+            border: 2px solid transparent;
+            border-radius: 0.5rem;
+            color: var(--text);
+            outline: none;
+        }
+
+        .time-input input:focus {
+            border-color: var(--accent);
+        }
+
+        .time-input span {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .time-separator {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+            padding-top: 0.5rem;
+        }
+
+        .btn {
+            padding: 1.25rem 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #1a1a1a;
+        }
+
+        .btn-fail {
+            background: var(--fail);
+            color: white;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-dim);
+            border: 1px solid var(--text-dim);
+        }
+
+        /* Training Screen */
+        .training-screen {
+            justify-content: space-between;
+            padding-bottom: 3rem;
+        }
+
+        .training-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .end-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .target-info {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.875rem;
+        }
+
+        .target-info span {
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .countdown-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .countdown {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 6rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .countdown-ms {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            color: var(--text-dim);
+        }
+
+        .round-info {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        .fail-btn {
+            width: 100%;
+            padding: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        /* Paused state */
+        .paused-message {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .paused-message.hidden {
+            display: none;
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 1.5rem;
+            font-size: 1.25rem;
+        }
+
+        .start-btn.hidden {
+            display: none;
+        }
+
+        .fail-btn.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="flash" id="flash"></div>
+
+    <!-- Setup Screen -->
+    <div class="screen setup-screen active" id="setup-screen">
+        <h1>Stay Timer</h1>
+        
+        <div class="input-group">
+            <label>Baseline Duration</label>
+            <div class="time-inputs">
+                <div class="time-input">
+                    <input type="number" id="baseline-min" value="1" min="0" max="59" inputmode="numeric">
+                    <span>min</span>
+                </div>
+                <span class="time-separator">:</span>
+                <div class="time-input">
+                    <input type="number" id="baseline-sec" value="0" min="0" max="59" inputmode="numeric">
+                    <span>sec</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Interval Increment</label>
+            <div class="time-inputs">
+                <div class="time-input">
+                    <input type="number" id="interval-min" value="0" min="0" max="59" inputmode="numeric">
+                    <span>min</span>
+                </div>
+                <span class="time-separator">:</span>
+                <div class="time-input">
+                    <input type="number" id="interval-sec" value="10" min="0" max="59" inputmode="numeric">
+                    <span>sec</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" id="start-training">Start Training</button>
+    </div>
+
+    <!-- Training Screen -->
+    <div class="screen training-screen" id="training-screen">
+        <div class="training-header">
+            <div></div>
+            <button class="btn btn-ghost end-btn" id="end-session">End</button>
+        </div>
+
+        <div class="target-info">
+            Target: <span id="target-display">1:00</span>
+        </div>
+
+        <div class="countdown-container">
+            <div class="countdown" id="countdown">1:00</div>
+            <div class="countdown-ms" id="countdown-ms">.00</div>
+            <div class="round-info">Round <span id="round-num">1</span></div>
+        </div>
+
+        <p class="paused-message hidden" id="paused-message">Dog broke. Ready when you are.</p>
+        <button class="btn btn-primary start-btn hidden" id="resume-btn">Start</button>
+        <button class="btn btn-fail fail-btn" id="fail-btn">Fail</button>
+    </div>
+
+    <script>
+        // State
+        let baselineMs = 60000;
+        let intervalMs = 10000;
+        let currentTargetMs = 60000;
+        let previousTargetMs = 60000;
+        let round = 1;
+        let timerEndTime = null;
+        let animationId = null;
+        let isPaused = false;
+
+        // Elements
+        const flash = document.getElementById('flash');
+        const setupScreen = document.getElementById('setup-screen');
+        const trainingScreen = document.getElementById('training-screen');
+        const countdown = document.getElementById('countdown');
+        const countdownMs = document.getElementById('countdown-ms');
+        const targetDisplay = document.getElementById('target-display');
+        const roundNum = document.getElementById('round-num');
+        const failBtn = document.getElementById('fail-btn');
+        const resumeBtn = document.getElementById('resume-btn');
+        const pausedMessage = document.getElementById('paused-message');
+        const startTrainingBtn = document.getElementById('start-training');
+        const endSessionBtn = document.getElementById('end-session');
+
+        // Input elements
+        const baselineMinInput = document.getElementById('baseline-min');
+        const baselineSecInput = document.getElementById('baseline-sec');
+        const intervalMinInput = document.getElementById('interval-min');
+        const intervalSecInput = document.getElementById('interval-sec');
+
+        // Keep screen awake
+        let wakeLock = null;
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                }
+            } catch (err) {
+                console.log('Wake lock failed:', err);
+            }
+        }
+
+        function releaseWakeLock() {
+            if (wakeLock) {
+                wakeLock.release();
+                wakeLock = null;
+            }
+        }
+
+        // Format time
+        function formatTime(ms) {
+            const totalSeconds = Math.ceil(ms / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function formatMs(ms) {
+            const fraction = Math.floor((ms % 1000) / 10);
+            return `.${fraction.toString().padStart(2, '0')}`;
+        }
+
+        // Calculate next target with variance (±20%, weighted upward)
+        function calculateNextTarget(baseTarget) {
+            const variance = 0.2;
+            const minMultiplier = 1 - variance;
+            const maxMultiplier = 1 + variance;
+            
+            // Weight upward: use a distribution that favors higher values
+            // Using squared random to bias toward upper end
+            const random = Math.random();
+            const weightedRandom = 0.3 * random + 0.7 * (random * random);
+            
+            const multiplier = minMultiplier + (maxMultiplier - minMultiplier) * weightedRandom;
+            return Math.round(baseTarget * multiplier);
+        }
+
+        // Flash screen
+        function triggerFlash() {
+            flash.classList.remove('active');
+            void flash.offsetWidth; // Force reflow
+            flash.classList.add('active');
+        }
+
+        // Timer loop
+        function updateTimer() {
+            const now = Date.now();
+            const remaining = Math.max(0, timerEndTime - now);
+
+            countdown.textContent = formatTime(remaining);
+            countdownMs.textContent = formatMs(remaining);
+
+            if (remaining <= 0) {
+                // Success!
+                triggerFlash();
+                round++;
+                roundNum.textContent = round;
+                
+                // Calculate next target: previous base + interval, then apply variance
+                previousTargetMs += intervalMs;
+                currentTargetMs = calculateNextTarget(previousTargetMs);
+                
+                targetDisplay.textContent = formatTime(currentTargetMs);
+                
+                // Start next timer immediately
+                timerEndTime = Date.now() + currentTargetMs;
+            }
+
+            animationId = requestAnimationFrame(updateTimer);
+        }
+
+        // Start training
+        function startTraining() {
+            baselineMs = (parseInt(baselineMinInput.value) || 0) * 60000 + 
+                         (parseInt(baselineSecInput.value) || 0) * 1000;
+            intervalMs = (parseInt(intervalMinInput.value) || 0) * 60000 + 
+                         (parseInt(intervalSecInput.value) || 0) * 1000;
+
+            if (baselineMs <= 0) {
+                baselineMs = 60000;
+            }
+            if (intervalMs <= 0) {
+                intervalMs = 10000;
+            }
+
+            // First round uses exact baseline (no variance)
+            currentTargetMs = baselineMs;
+            previousTargetMs = baselineMs;
+            round = 1;
+            isPaused = false;
+
+            roundNum.textContent = round;
+            targetDisplay.textContent = formatTime(currentTargetMs);
+            
+            setupScreen.classList.remove('active');
+            trainingScreen.classList.add('active');
+            
+            failBtn.classList.remove('hidden');
+            resumeBtn.classList.add('hidden');
+            pausedMessage.classList.add('hidden');
+
+            requestWakeLock();
+            
+            timerEndTime = Date.now() + currentTargetMs;
+            animationId = requestAnimationFrame(updateTimer);
+        }
+
+        // Fail - drop back one step
+        function handleFail() {
+            if (isPaused) return;
+            
+            cancelAnimationFrame(animationId);
+            isPaused = true;
+
+            // Drop back one interval (but not below baseline)
+            previousTargetMs = Math.max(baselineMs, previousTargetMs - intervalMs);
+            currentTargetMs = calculateNextTarget(previousTargetMs);
+            
+            targetDisplay.textContent = formatTime(currentTargetMs);
+            countdown.textContent = formatTime(currentTargetMs);
+            countdownMs.textContent = '.00';
+
+            failBtn.classList.add('hidden');
+            resumeBtn.classList.remove('hidden');
+            pausedMessage.classList.remove('hidden');
+        }
+
+        // Resume after fail
+        function handleResume() {
+            isPaused = false;
+            
+            failBtn.classList.remove('hidden');
+            resumeBtn.classList.add('hidden');
+            pausedMessage.classList.add('hidden');
+
+            round++;
+            roundNum.textContent = round;
+            
+            timerEndTime = Date.now() + currentTargetMs;
+            animationId = requestAnimationFrame(updateTimer);
+        }
+
+        // End session
+        function endSession() {
+            cancelAnimationFrame(animationId);
+            releaseWakeLock();
+            
+            trainingScreen.classList.remove('active');
+            setupScreen.classList.add('active');
+        }
+
+        // Event listeners
+        startTrainingBtn.addEventListener('click', startTraining);
+        failBtn.addEventListener('click', handleFail);
+        resumeBtn.addEventListener('click', handleResume);
+        endSessionBtn.addEventListener('click', endSession);
+
+        // Handle visibility change (re-acquire wake lock)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && !isPaused && trainingScreen.classList.contains('active')) {
+                requestWakeLock();
+            }
+        });
+
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
