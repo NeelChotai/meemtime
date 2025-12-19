@@ -1,22 +1,22 @@
-// State
-let baselineMs = 60000;
-let intervalMs = 10000;
-let currentTargetMs = 60000;
-let lastCompletedTarget = 0;
-let nextTargetMs = 0;
-let round = 1;
+// Get TimerSession from global (loaded via script tag before this file)
+const { TimerSession } = window.TimerLogic;
+
+// Session state (uses tested TimerSession class)
+let session = null;
+
+// UI/timing state (not part of timer logic)
 let timerEndTime = null;
 let animationId = null;
 let isPaused = false;
 let isAfterFail = false;
 let sessionStartTime = null;
 let totalActiveTime = 0;
-let roundHistory = [];
-let remainingTimeAtPause = 0;  // For pause/resume
+let remainingTimeAtPause = 0;
+let nextRandomValue = 0;  // Sync preview with actual next target
 
 // Settings state
 let vibrateEnabled = false;
-let flashColor = '#4ade80';  // default green
+let flashColor = '#4ade80';
 
 // Elements
 const flash = document.getElementById('flash');
@@ -58,7 +58,7 @@ async function requestWakeLock() {
             wakeLock = await navigator.wakeLock.request('screen');
         }
     } catch (err) {
-        console.log('Wake lock failed:', err);
+        console.warn('Wake lock unavailable:', err);
     }
 }
 
@@ -82,17 +82,8 @@ function formatMs(ms) {
     return `.${fraction.toString().padStart(2, '0')}`;
 }
 
-// Calculate next target with upward-only variance (1.0x to 1.2x)
-function calculateNextTarget(baseTarget) {
-    const maxVariance = 0.2;
-    const random = Math.random();
-    const multiplier = 1 + (random * maxVariance);
-    return Math.round(baseTarget * multiplier);
-}
-
 // Flash screen and vibrate
 function triggerFlash() {
-    // Flash if not disabled
     if (flashColor !== 'off') {
         flash.style.background = flashColor;
         flash.classList.remove('active');
@@ -100,7 +91,6 @@ function triggerFlash() {
         flash.classList.add('active');
     }
 
-    // Vibrate if enabled
     if (vibrateEnabled && navigator.vibrate) {
         navigator.vibrate(100);
     }
@@ -122,8 +112,6 @@ function closeSettings() {
 function setFlashColor(color) {
     flashColor = color;
     localStorage.setItem('meemtime-flash-color', color);
-
-    // Update selected state
     flashColorContainer.querySelectorAll('button').forEach(btn => {
         btn.classList.toggle('selected', btn.dataset.color === color);
     });
@@ -140,7 +128,6 @@ function setVibrate(enabled) {
 }
 
 function loadSettings() {
-    // Load flash color
     const savedColor = localStorage.getItem('meemtime-flash-color');
     if (savedColor) {
         flashColor = savedColor;
@@ -149,7 +136,6 @@ function loadSettings() {
         });
     }
 
-    // Load vibrate setting
     const savedVibrate = localStorage.getItem('meemtime-vibrate');
     if (savedVibrate === 'true') {
         vibrateEnabled = true;
@@ -165,9 +151,6 @@ function updateSessionTimer() {
 
 // Add round to history display
 function addToHistory(roundNumber, durationMs) {
-    roundHistory.push({ round: roundNumber, duration: durationMs });
-
-    // Remove empty state message if present
     const emptyMsg = roundHistoryContainer.querySelector('.round-history-empty');
     if (emptyMsg) {
         emptyMsg.remove();
@@ -177,15 +160,14 @@ function addToHistory(roundNumber, durationMs) {
     item.className = 'round-history-item';
     item.innerHTML = `Round ${roundNumber} <span>${formatTime(durationMs)}</span>`;
     roundHistoryContainer.appendChild(item);
-
     roundHistoryContainer.scrollTop = roundHistoryContainer.scrollHeight;
 }
 
-// Calculate and display next target preview
+// Generate next random value and update preview display
 function updateNextTargetPreview() {
-    const baseTarget = currentTargetMs + intervalMs;
-    nextTargetMs = calculateNextTarget(baseTarget);
-    nextTargetDisplay.textContent = formatTime(nextTargetMs);
+    nextRandomValue = Math.random();
+    const preview = session.previewNextTarget(nextRandomValue);
+    nextTargetDisplay.textContent = formatTime(preview);
 }
 
 // Timer loop
@@ -199,18 +181,22 @@ function updateTimer() {
 
     if (remaining <= 0) {
         triggerFlash();
-        addToHistory(round, currentTargetMs);
-        lastCompletedTarget = currentTargetMs;
 
-        round++;
-        roundNum.textContent = round;
+        // Record completed round before advancing
+        addToHistory(session.round, session.currentTarget);
 
-        currentTargetMs = nextTargetMs;
-        targetDisplay.textContent = formatTime(currentTargetMs);
+        // Advance to next round using pre-calculated random value
+        session.completeRound(nextRandomValue);
 
+        // Update display
+        roundNum.textContent = session.round;
+        targetDisplay.textContent = formatTime(session.currentTarget);
+
+        // Calculate next preview
         updateNextTargetPreview();
 
-        timerEndTime = Date.now() + currentTargetMs;
+        // Start next timer
+        timerEndTime = Date.now() + session.currentTarget;
     }
 
     animationId = requestAnimationFrame(updateTimer);
@@ -234,38 +220,45 @@ function showResumeState(afterFail = false) {
     }
 }
 
+// Input validation helper
+function clamp(val, min, max) {
+    return Math.max(min, Math.min(max, val));
+}
+
 // Start training
 function startTraining() {
-    baselineMs = (parseInt(baselineMinInput.value) || 0) * 60000 +
-                 (parseInt(baselineSecInput.value) || 0) * 1000;
-    intervalMs = (parseInt(intervalMinInput.value) || 0) * 60000 +
-                 (parseInt(intervalSecInput.value) || 0) * 1000;
+    // Parse and validate inputs
+    const baselineMin = clamp(parseInt(baselineMinInput.value) || 0, 0, 59);
+    const baselineSec = clamp(parseInt(baselineSecInput.value) || 0, 0, 59);
+    const intervalMin = clamp(parseInt(intervalMinInput.value) || 0, 0, 59);
+    const intervalSec = clamp(parseInt(intervalSecInput.value) || 0, 0, 59);
 
-    if (baselineMs <= 0) {
-        baselineMs = 60000;
-    }
-    if (intervalMs <= 0) {
-        intervalMs = 10000;
-    }
+    let baselineMs = baselineMin * 60000 + baselineSec * 1000;
+    let intervalMs = intervalMin * 60000 + intervalSec * 1000;
 
-    currentTargetMs = baselineMs;
-    lastCompletedTarget = 0;
-    round = 1;
+    // Enforce minimums
+    if (baselineMs < 1000) baselineMs = 1000;
+    if (intervalMs < 1000) intervalMs = 1000;
+
+    // Create new session with validated values
+    session = new TimerSession(baselineMs, intervalMs);
+
+    // Reset UI state
     isPaused = false;
     isAfterFail = false;
     remainingTimeAtPause = 0;
-
     sessionStartTime = Date.now();
     totalActiveTime = 0;
-    roundHistory = [];
 
-    // Reset history with empty state
+    // Reset history display
     roundHistoryContainer.innerHTML = '<div class="round-history-empty">No rounds completed yet</div>';
 
-    roundNum.textContent = round;
-    targetDisplay.textContent = formatTime(currentTargetMs);
+    // Update display
+    roundNum.textContent = session.round;
+    targetDisplay.textContent = formatTime(session.currentTarget);
     updateNextTargetPreview();
 
+    // Switch screens
     closeSettings();
     setupScreen.classList.remove('active');
     trainingScreen.classList.add('active');
@@ -273,7 +266,8 @@ function startTraining() {
     showActiveButtons();
     requestWakeLock();
 
-    timerEndTime = Date.now() + currentTargetMs;
+    // Start timer
+    timerEndTime = Date.now() + session.currentTarget;
     animationId = requestAnimationFrame(updateTimer);
 }
 
@@ -282,11 +276,9 @@ function handlePause() {
     if (isPaused) return;
 
     cancelAnimationFrame(animationId);
+    animationId = null;  // Clear to prevent race conditions
 
-    // Save remaining time
     remainingTimeAtPause = Math.max(0, timerEndTime - Date.now());
-
-    // Accumulate active time
     totalActiveTime += Date.now() - sessionStartTime;
 
     isPaused = true;
@@ -303,39 +295,45 @@ function handleFail() {
     if (isPaused) return;
 
     cancelAnimationFrame(animationId);
+    animationId = null;  // Clear to prevent race conditions
 
-    // Accumulate active time
     totalActiveTime += Date.now() - sessionStartTime;
 
     isPaused = true;
     isAfterFail = true;
     remainingTimeAtPause = 0;
 
-    // Reset to last completed target (or baseline)
-    currentTargetMs = lastCompletedTarget > 0 ? lastCompletedTarget : baselineMs;
+    // Use TimerSession to calculate fail target
+    session.fail();
+
+    // Update next preview for after resume
     updateNextTargetPreview();
 
-    failMessage.textContent = `Dog broke. Back to ${formatTime(currentTargetMs)}.`;
-    targetDisplay.textContent = formatTime(currentTargetMs);
-    countdown.textContent = formatTime(currentTargetMs);
+    // Update display
+    targetDisplay.textContent = formatTime(session.currentTarget);
+    countdown.textContent = formatTime(session.currentTarget);
     countdownMs.textContent = '.00';
+
+    failMessage.textContent = `Dog broke. Back to ${formatTime(session.currentTarget)}.`;
 
     showResumeState(true);
 }
 
 // Resume after pause or fail
 function handleResume() {
+    if (!isPaused) return;  // Guard against double-click
+
     isPaused = false;
     sessionStartTime = Date.now();
 
     showActiveButtons();
 
     if (isAfterFail) {
-        // After fail: start fresh round with last completed target
+        // After fail: start fresh round with recovery target
         isAfterFail = false;
-        round++;
-        roundNum.textContent = round;
-        timerEndTime = Date.now() + currentTargetMs;
+        session.resume();  // Increments round counter
+        roundNum.textContent = session.round;
+        timerEndTime = Date.now() + session.currentTarget;
     } else {
         // After pause: continue from where we left off
         timerEndTime = Date.now() + remainingTimeAtPause;
@@ -346,7 +344,10 @@ function handleResume() {
 
 // End session
 function endSession() {
-    cancelAnimationFrame(animationId);
+    if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
     releaseWakeLock();
     closeSettings();
 
@@ -368,7 +369,7 @@ function ensureInputDefaults() {
     });
 }
 
-// Initialize when DOM is ready
+// Initialize
 function init() {
     // Event listeners
     startTrainingBtn.addEventListener('click', startTraining);
@@ -404,13 +405,15 @@ function init() {
         }
     });
 
-    // Ensure inputs show 0 instead of blank
-    ensureInputDefaults();
+    // Flash animation cleanup
+    flash.addEventListener('animationend', () => {
+        flash.classList.remove('active');
+    });
 
-    // Load saved settings
+    ensureInputDefaults();
     loadSettings();
 
-    // Register service worker (only works over HTTP)
+    // Register service worker
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
         navigator.serviceWorker.register('./sw.js');
     }
