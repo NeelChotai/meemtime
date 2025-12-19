@@ -14,6 +14,10 @@ let totalActiveTime = 0;
 let roundHistory = [];
 let remainingTimeAtPause = 0;  // For pause/resume
 
+// Settings state
+let vibrateEnabled = false;
+let flashColor = '#4ade80';  // default green
+
 // Elements
 const flash = document.getElementById('flash');
 const setupScreen = document.getElementById('setup-screen');
@@ -31,6 +35,12 @@ const endSessionBtn = document.getElementById('end-session');
 const sessionTimerDisplay = document.getElementById('session-timer');
 const nextTargetDisplay = document.getElementById('next-target');
 const roundHistoryContainer = document.getElementById('round-history');
+
+// Settings elements
+const settingsToggle = document.getElementById('settings-toggle');
+const settingsPanel = document.getElementById('settings-panel');
+const vibrateToggle = document.getElementById('vibrate-toggle');
+const flashColorContainer = document.getElementById('flash-color');
 
 // Input elements
 const baselineMinInput = document.getElementById('baseline-min');
@@ -78,11 +88,59 @@ function calculateNextTarget(baseTarget) {
     return Math.round(baseTarget * multiplier);
 }
 
-// Flash screen
+// Flash screen and vibrate
 function triggerFlash() {
-    flash.classList.remove('active');
-    void flash.offsetWidth;
-    flash.classList.add('active');
+    // Flash if not disabled
+    if (flashColor !== 'off') {
+        flash.style.background = flashColor;
+        flash.classList.remove('active');
+        void flash.offsetWidth;
+        flash.classList.add('active');
+    }
+
+    // Vibrate if enabled
+    if (vibrateEnabled && navigator.vibrate) {
+        navigator.vibrate(100);
+    }
+}
+
+// Settings functions
+function toggleSettings() {
+    settingsPanel.classList.toggle('hidden');
+    settingsToggle.classList.toggle('active');
+}
+
+function setFlashColor(color) {
+    flashColor = color;
+    localStorage.setItem('meemtime-flash-color', color);
+
+    // Update selected state
+    flashColorContainer.querySelectorAll('button').forEach(btn => {
+        btn.classList.toggle('selected', btn.dataset.color === color);
+    });
+}
+
+function setVibrate(enabled) {
+    vibrateEnabled = enabled;
+    localStorage.setItem('meemtime-vibrate', enabled ? 'true' : 'false');
+}
+
+function loadSettings() {
+    // Load flash color
+    const savedColor = localStorage.getItem('meemtime-flash-color');
+    if (savedColor) {
+        flashColor = savedColor;
+        flashColorContainer.querySelectorAll('button').forEach(btn => {
+            btn.classList.toggle('selected', btn.dataset.color === savedColor);
+        });
+    }
+
+    // Load vibrate setting
+    const savedVibrate = localStorage.getItem('meemtime-vibrate');
+    if (savedVibrate === 'true') {
+        vibrateEnabled = true;
+        vibrateToggle.checked = true;
+    }
 }
 
 // Update session timer display
@@ -103,7 +161,7 @@ function addToHistory(roundNumber, durationMs) {
 
     const item = document.createElement('div');
     item.className = 'round-history-item';
-    item.innerHTML = `Round ${roundNumber}: <span>${formatTime(durationMs)}</span>`;
+    item.innerHTML = `Round ${roundNumber} <span>${formatTime(durationMs)}</span>`;
     roundHistoryContainer.appendChild(item);
 
     roundHistoryContainer.scrollTop = roundHistoryContainer.scrollHeight;
@@ -296,6 +354,15 @@ function init() {
     resumeBtn.addEventListener('click', handleResume);
     endSessionBtn.addEventListener('click', endSession);
 
+    // Settings event listeners
+    settingsToggle.addEventListener('click', toggleSettings);
+    vibrateToggle.addEventListener('change', (e) => setVibrate(e.target.checked));
+    flashColorContainer.addEventListener('click', (e) => {
+        if (e.target.dataset.color) {
+            setFlashColor(e.target.dataset.color);
+        }
+    });
+
     // Handle visibility change (re-acquire wake lock)
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible' && !isPaused && trainingScreen.classList.contains('active')) {
@@ -305,6 +372,9 @@ function init() {
 
     // Ensure inputs show 0 instead of blank
     ensureInputDefaults();
+
+    // Load saved settings
+    loadSettings();
 
     // Register service worker (only works over HTTP)
     if ('serviceWorker' in navigator && location.protocol !== 'file:') {
