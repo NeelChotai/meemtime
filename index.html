@@ -18,6 +18,14 @@
 
     <!-- Setup Screen -->
     <div class="screen setup-screen active" id="setup-screen">
+        <div class="setup-header">
+            <button class="settings-toggle" id="settings-toggle" type="button" aria-label="Settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+            </button>
+        </div>
         <div class="setup-content">
             <h1>meemtime</h1>
 
@@ -51,33 +59,6 @@
                 </div>
             </div>
 
-            <div class="settings-row">
-                <button class="settings-toggle" id="settings-toggle" type="button" aria-label="Settings">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <div class="settings-panel hidden" id="settings-panel">
-                <label class="setting">
-                    <span>Vibrate on round change</span>
-                    <input type="checkbox" id="vibrate-toggle">
-                    <span class="toggle-switch"></span>
-                </label>
-                <div class="setting">
-                    <span>Flash colour</span>
-                    <div class="color-swatches" id="flash-color">
-                        <button type="button" data-color="#4ade80" class="selected" aria-label="Green"></button>
-                        <button type="button" data-color="#3b82f6" aria-label="Blue"></button>
-                        <button type="button" data-color="#a855f7" aria-label="Purple"></button>
-                        <button type="button" data-color="#f97316" aria-label="Orange"></button>
-                        <button type="button" data-color="off" aria-label="Off" class="color-off"></button>
-                    </div>
-                </div>
-            </div>
-
             <button class="btn btn-primary" id="start-training">Start Training</button>
         </div>
     </div>
@@ -86,7 +67,15 @@
     <div class="screen training-screen" id="training-screen">
         <div class="training-header">
             <div class="session-timer" id="session-timer">0:00</div>
-            <button class="btn btn-ghost end-btn" id="end-session">End</button>
+            <div class="header-actions">
+                <button class="settings-toggle" id="settings-toggle-training" type="button" aria-label="Settings">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </button>
+                <button class="btn btn-ghost end-btn" id="end-session">End</button>
+            </div>
         </div>
 
         <div class="countdown-container">
@@ -107,6 +96,25 @@
         <div class="button-row" id="button-row">
             <button class="btn btn-fail" id="fail-btn">Fail</button>
             <button class="btn btn-pause" id="pause-btn">Pause</button>
+        </div>
+    </div>
+
+    <!-- Settings Panel (shared) -->
+    <div class="settings-panel hidden" id="settings-panel">
+        <label class="setting">
+            <span>Vibrate on round change</span>
+            <input type="checkbox" id="vibrate-toggle">
+            <span class="toggle-switch"></span>
+        </label>
+        <div class="setting">
+            <span>Flash colour</span>
+            <div class="color-swatches" id="flash-color">
+                <button type="button" data-color="#4ade80" class="selected" aria-label="Green"></button>
+                <button type="button" data-color="#3b82f6" aria-label="Blue"></button>
+                <button type="button" data-color="#a855f7" aria-label="Purple"></button>
+                <button type="button" data-color="#f97316" aria-label="Orange"></button>
+                <button type="button" data-color="off" aria-label="Off" class="color-off"></button>
+            </div>
         </div>
     </div>
 

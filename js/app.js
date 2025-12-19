@@ -38,6 +38,7 @@ const roundHistoryContainer = document.getElementById('round-history');
 
 // Settings elements
 const settingsToggle = document.getElementById('settings-toggle');
+const settingsToggleTraining = document.getElementById('settings-toggle-training');
 const settingsPanel = document.getElementById('settings-panel');
 const vibrateToggle = document.getElementById('vibrate-toggle');
 const flashColorContainer = document.getElementById('flash-color');
@@ -106,8 +107,15 @@ function triggerFlash() {
 
 // Settings functions
 function toggleSettings() {
-    settingsPanel.classList.toggle('hidden');
-    settingsToggle.classList.toggle('active');
+    const isHidden = settingsPanel.classList.toggle('hidden');
+    settingsToggle.classList.toggle('active', !isHidden);
+    settingsToggleTraining.classList.toggle('active', !isHidden);
+}
+
+function closeSettings() {
+    settingsPanel.classList.add('hidden');
+    settingsToggle.classList.remove('active');
+    settingsToggleTraining.classList.remove('active');
 }
 
 function setFlashColor(color) {
@@ -246,6 +254,7 @@ function startTraining() {
     targetDisplay.textContent = formatTime(currentTargetMs);
     updateNextTargetPreview();
 
+    closeSettings();
     setupScreen.classList.remove('active');
     trainingScreen.classList.add('active');
 
@@ -326,6 +335,7 @@ function handleResume() {
 function endSession() {
     cancelAnimationFrame(animationId);
     releaseWakeLock();
+    closeSettings();
 
     trainingScreen.classList.remove('active');
     setupScreen.classList.add('active');
@@ -356,10 +366,21 @@ function init() {
 
     // Settings event listeners
     settingsToggle.addEventListener('click', toggleSettings);
+    settingsToggleTraining.addEventListener('click', toggleSettings);
     vibrateToggle.addEventListener('change', (e) => setVibrate(e.target.checked));
     flashColorContainer.addEventListener('click', (e) => {
         if (e.target.dataset.color) {
             setFlashColor(e.target.dataset.color);
+        }
+    });
+
+    // Close settings when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!settingsPanel.classList.contains('hidden') &&
+            !settingsPanel.contains(e.target) &&
+            !settingsToggle.contains(e.target) &&
+            !settingsToggleTraining.contains(e.target)) {
+            closeSettings();
         }
     });
 
