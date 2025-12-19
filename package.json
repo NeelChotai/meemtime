@@ -1,0 +1,13 @@
+{
+  "name": "stay-timer",
+  "version": "1.0.0",
+  "description": "PWA interval timer for dog training",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.16"
+  }
+}
