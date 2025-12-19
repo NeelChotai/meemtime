@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meemtime-v2';
+const CACHE_NAME = 'meemtime-v20251219';
 const ASSETS = [
   './',
   './index.html',

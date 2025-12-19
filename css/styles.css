@@ -237,6 +237,13 @@ label {
     gap: 1.5rem;
     font-size: 0.875rem;
     color: var(--text-dim);
+    gap: 1rem;
+}
+
+.setting > span:first-child {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
 }
 
 .setting > span:first-child {
