@@ -42,24 +42,24 @@
             height: 100dvh;
         }
 
-        /* Flash overlay */
+        /* Flash overlay - gentle green pulse */
         .flash {
             position: fixed;
             inset: 0;
-            background: white;
+            background: var(--accent);
             opacity: 0;
             pointer-events: none;
             z-index: 1000;
         }
 
         .flash.active {
-            animation: flash 0.6s ease-out;
+            animation: flash 0.5s ease-in-out;
         }
 
         @keyframes flash {
-            0%, 100% { opacity: 0; }
-            10%, 30%, 50% { opacity: 1; }
-            20%, 40% { opacity: 0; }
+            0% { opacity: 0; }
+            50% { opacity: 0.4; }
+            100% { opacity: 0; }
         }
 
         /* Setup Screen */
@@ -76,6 +76,15 @@
 
         .setup-screen {
             justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .setup-content {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
             gap: 2rem;
         }
 
@@ -127,6 +136,22 @@
 
         .time-input input:focus {
             border-color: var(--accent);
+        }
+
+        /* Style number input spinners */
+        .time-input input::-webkit-inner-spin-button,
+        .time-input input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--surface);
+            border-left: 1px solid var(--text-dim);
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .time-input input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
         }
 
         .time-input span {
@@ -258,6 +283,56 @@
         .fail-btn.hidden {
             display: none;
         }
+
+        /* Session timer in header */
+        .session-timer {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        /* Next target preview */
+        .next-preview {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+        }
+
+        .next-preview span {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Round history */
+        .round-history {
+            max-height: 120px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: var(--surface);
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .round-history:empty {
+            display: none;
+        }
+
+        .round-history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .round-history-item:last-child {
+            border-bottom: none;
+        }
+
+        .round-history-item span {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text);
+        }
     </style>
 </head>
 <body>
@@ -265,45 +340,47 @@
 
     <!-- Setup Screen -->
     <div class="screen setup-screen active" id="setup-screen">
-        <h1>Stay Timer</h1>
-        
-        <div class="input-group">
-            <label>Baseline Duration</label>
-            <div class="time-inputs">
-                <div class="time-input">
-                    <input type="number" id="baseline-min" value="1" min="0" max="59" inputmode="numeric">
-                    <span>min</span>
-                </div>
-                <span class="time-separator">:</span>
-                <div class="time-input">
-                    <input type="number" id="baseline-sec" value="0" min="0" max="59" inputmode="numeric">
-                    <span>sec</span>
+        <div class="setup-content">
+            <h1>Stay Timer</h1>
+
+            <div class="input-group">
+                <label>Baseline Duration</label>
+                <div class="time-inputs">
+                    <div class="time-input">
+                        <input type="number" id="baseline-min" value="1" min="0" max="59" inputmode="numeric">
+                        <span>min</span>
+                    </div>
+                    <span class="time-separator">:</span>
+                    <div class="time-input">
+                        <input type="number" id="baseline-sec" value="0" min="0" max="59" inputmode="numeric">
+                        <span>sec</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="input-group">
-            <label>Interval Increment</label>
-            <div class="time-inputs">
-                <div class="time-input">
-                    <input type="number" id="interval-min" value="0" min="0" max="59" inputmode="numeric">
-                    <span>min</span>
-                </div>
-                <span class="time-separator">:</span>
-                <div class="time-input">
-                    <input type="number" id="interval-sec" value="10" min="0" max="59" inputmode="numeric">
-                    <span>sec</span>
+            <div class="input-group">
+                <label>Interval Increment</label>
+                <div class="time-inputs">
+                    <div class="time-input">
+                        <input type="number" id="interval-min" value="0" min="0" max="59" inputmode="numeric">
+                        <span>min</span>
+                    </div>
+                    <span class="time-separator">:</span>
+                    <div class="time-input">
+                        <input type="number" id="interval-sec" value="10" min="0" max="59" inputmode="numeric">
+                        <span>sec</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <button class="btn btn-primary" id="start-training">Start Training</button>
+            <button class="btn btn-primary" id="start-training">Start Training</button>
+        </div>
     </div>
 
     <!-- Training Screen -->
     <div class="screen training-screen" id="training-screen">
         <div class="training-header">
-            <div></div>
+            <div class="session-timer" id="session-timer">0:00</div>
             <button class="btn btn-ghost end-btn" id="end-session">End</button>
         </div>
 
@@ -315,7 +392,10 @@
             <div class="countdown" id="countdown">1:00</div>
             <div class="countdown-ms" id="countdown-ms">.00</div>
             <div class="round-info">Round <span id="round-num">1</span></div>
+            <div class="next-preview">next: <span id="next-target">--</span></div>
         </div>
+
+        <div class="round-history" id="round-history"></div>
 
         <p class="paused-message hidden" id="paused-message">Dog broke. Ready when you are.</p>
         <button class="btn btn-primary start-btn hidden" id="resume-btn">Start</button>
@@ -327,11 +407,16 @@
         let baselineMs = 60000;
         let intervalMs = 10000;
         let currentTargetMs = 60000;
-        let previousTargetMs = 60000;
+        let lastCompletedTarget = 0;  // Tracks the last successfully completed target
+        let nextTargetMs = 0;  // Pre-calculated next target
         let round = 1;
         let timerEndTime = null;
         let animationId = null;
         let isPaused = false;
+        let isAfterFail = false;  // Flag to skip variance on recovery round
+        let sessionStartTime = null;  // When session started
+        let totalActiveTime = 0;  // Accumulated active time (excludes pauses)
+        let roundHistory = [];  // Array of {round, duration} for completed rounds
 
         // Elements
         const flash = document.getElementById('flash');
@@ -346,6 +431,9 @@
         const pausedMessage = document.getElementById('paused-message');
         const startTrainingBtn = document.getElementById('start-training');
         const endSessionBtn = document.getElementById('end-session');
+        const sessionTimerDisplay = document.getElementById('session-timer');
+        const nextTargetDisplay = document.getElementById('next-target');
+        const roundHistoryContainer = document.getElementById('round-history');
 
         // Input elements
         const baselineMinInput = document.getElementById('baseline-min');
@@ -385,18 +473,14 @@
             return `.${fraction.toString().padStart(2, '0')}`;
         }
 
-        // Calculate next target with variance (±20%, weighted upward)
+        // Calculate next target with upward-only variance (1.0x to 1.2x)
         function calculateNextTarget(baseTarget) {
-            const variance = 0.2;
-            const minMultiplier = 1 - variance;
-            const maxMultiplier = 1 + variance;
-            
-            // Weight upward: use a distribution that favors higher values
-            // Using squared random to bias toward upper end
+            const maxVariance = 0.2;  // Up to 20% above base
+
+            // Random value 0-1, apply to variance range
             const random = Math.random();
-            const weightedRandom = 0.3 * random + 0.7 * (random * random);
-            
-            const multiplier = minMultiplier + (maxMultiplier - minMultiplier) * weightedRandom;
+            const multiplier = 1 + (random * maxVariance);
+
             return Math.round(baseTarget * multiplier);
         }
 
@@ -407,6 +491,32 @@
             flash.classList.add('active');
         }
 
+        // Update session timer display
+        function updateSessionTimer() {
+            const elapsed = totalActiveTime + (isPaused ? 0 : (Date.now() - sessionStartTime));
+            sessionTimerDisplay.textContent = formatTime(elapsed);
+        }
+
+        // Add round to history display
+        function addToHistory(roundNum, durationMs) {
+            roundHistory.push({ round: roundNum, duration: durationMs });
+
+            const item = document.createElement('div');
+            item.className = 'round-history-item';
+            item.innerHTML = `Round ${roundNum}: <span>${formatTime(durationMs)}</span>`;
+            roundHistoryContainer.appendChild(item);
+
+            // Scroll to bottom
+            roundHistoryContainer.scrollTop = roundHistoryContainer.scrollHeight;
+        }
+
+        // Calculate and display next target preview
+        function updateNextTargetPreview() {
+            const baseTarget = currentTargetMs + intervalMs;
+            nextTargetMs = calculateNextTarget(baseTarget);
+            nextTargetDisplay.textContent = formatTime(nextTargetMs);
+        }
+
         // Timer loop
         function updateTimer() {
             const now = Date.now();
@@ -414,19 +524,28 @@
 
             countdown.textContent = formatTime(remaining);
             countdownMs.textContent = formatMs(remaining);
+            updateSessionTimer();
 
             if (remaining <= 0) {
                 // Success!
                 triggerFlash();
+
+                // Add to history
+                addToHistory(round, currentTargetMs);
+
+                // Record this as last completed target
+                lastCompletedTarget = currentTargetMs;
+
                 round++;
                 roundNum.textContent = round;
-                
-                // Calculate next target: previous base + interval, then apply variance
-                previousTargetMs += intervalMs;
-                currentTargetMs = calculateNextTarget(previousTargetMs);
-                
+
+                // Use pre-calculated next target
+                currentTargetMs = nextTargetMs;
                 targetDisplay.textContent = formatTime(currentTargetMs);
-                
+
+                // Calculate preview for the round after this
+                updateNextTargetPreview();
+
                 // Start next timer immediately
                 timerEndTime = Date.now() + currentTargetMs;
             }
@@ -450,37 +569,54 @@
 
             // First round uses exact baseline (no variance)
             currentTargetMs = baselineMs;
-            previousTargetMs = baselineMs;
+            lastCompletedTarget = 0;  // Nothing completed yet
             round = 1;
             isPaused = false;
+            isAfterFail = false;
+
+            // Initialize session tracking
+            sessionStartTime = Date.now();
+            totalActiveTime = 0;
+            roundHistory = [];
+            roundHistoryContainer.innerHTML = '';
 
             roundNum.textContent = round;
             targetDisplay.textContent = formatTime(currentTargetMs);
-            
+
+            // Calculate first next target preview
+            updateNextTargetPreview();
+
             setupScreen.classList.remove('active');
             trainingScreen.classList.add('active');
-            
+
             failBtn.classList.remove('hidden');
             resumeBtn.classList.add('hidden');
             pausedMessage.classList.add('hidden');
 
             requestWakeLock();
-            
+
             timerEndTime = Date.now() + currentTargetMs;
             animationId = requestAnimationFrame(updateTimer);
         }
 
-        // Fail - drop back one step
+        // Fail - reset to last completed target exactly
         function handleFail() {
             if (isPaused) return;
-            
-            cancelAnimationFrame(animationId);
-            isPaused = true;
 
-            // Drop back one interval (but not below baseline)
-            previousTargetMs = Math.max(baselineMs, previousTargetMs - intervalMs);
-            currentTargetMs = calculateNextTarget(previousTargetMs);
-            
+            cancelAnimationFrame(animationId);
+
+            // Accumulate active time before pausing
+            totalActiveTime += Date.now() - sessionStartTime;
+
+            isPaused = true;
+            isAfterFail = true;
+
+            // Reset to exact last completed target (or baseline if none completed)
+            currentTargetMs = lastCompletedTarget > 0 ? lastCompletedTarget : baselineMs;
+
+            // After fail, next target is: current + interval with variance
+            updateNextTargetPreview();
+
             targetDisplay.textContent = formatTime(currentTargetMs);
             countdown.textContent = formatTime(currentTargetMs);
             countdownMs.textContent = '.00';
@@ -493,14 +629,18 @@
         // Resume after fail
         function handleResume() {
             isPaused = false;
-            
+            isAfterFail = false;
+
+            // Resume session timer from now
+            sessionStartTime = Date.now();
+
             failBtn.classList.remove('hidden');
             resumeBtn.classList.add('hidden');
             pausedMessage.classList.add('hidden');
 
             round++;
             roundNum.textContent = round;
-            
+
             timerEndTime = Date.now() + currentTargetMs;
             animationId = requestAnimationFrame(updateTimer);
         }
