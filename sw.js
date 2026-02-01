@@ -1,10 +1,15 @@
-const CACHE_NAME = 'meemtime-v20251219';
+const CACHE_NAME = 'meemtime-v20260201';
 const ASSETS = [
   './',
   './index.html',
   './css/styles.css',
+  './css/relaxation.css',
   './js/app.js',
   './js/timer-logic.js',
+  './js/timer-display.js',
+  './js/relaxation-data.js',
+  './js/relaxation-logic.js',
+  './js/relaxation-app.js',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png'
