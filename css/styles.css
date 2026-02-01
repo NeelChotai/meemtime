@@ -70,7 +70,11 @@ body {
 .setup-header {
     position: absolute;
     top: max(1rem, env(safe-area-inset-top));
+    left: max(1rem, env(safe-area-inset-left));
     right: max(1rem, env(safe-area-inset-right));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .setup-content {
@@ -86,6 +90,12 @@ h1 {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
+}
+
+.home-logo {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 1rem;
 }
 
 .input-group {

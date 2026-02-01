@@ -20,8 +20,10 @@ let flashColor = '#4ade80';
 
 // Elements
 const flash = document.getElementById('flash');
+const homeScreen = document.getElementById('home-screen');
 const setupScreen = document.getElementById('setup-screen');
 const trainingScreen = document.getElementById('training-screen');
+const setupBackBtn = document.getElementById('setup-back-home');
 const countdown = document.getElementById('countdown');
 const countdownMs = document.getElementById('countdown-ms');
 const targetDisplay = document.getElementById('target-display');
@@ -369,6 +371,13 @@ function ensureInputDefaults() {
     });
 }
 
+// Go back to home screen
+function goToHome() {
+    closeSettings();
+    setupScreen.classList.remove('active');
+    homeScreen.classList.add('active');
+}
+
 // Initialize
 function init() {
     // Event listeners
@@ -377,6 +386,7 @@ function init() {
     pauseBtn.addEventListener('click', handlePause);
     resumeBtn.addEventListener('click', handleResume);
     endSessionBtn.addEventListener('click', endSession);
+    setupBackBtn.addEventListener('click', goToHome);
 
     // Settings event listeners
     settingsToggle.addEventListener('click', toggleSettings);
