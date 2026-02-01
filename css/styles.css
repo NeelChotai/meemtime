@@ -92,6 +92,12 @@ h1 {
     margin-bottom: 0.5rem;
 }
 
+.home-logo {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 1rem;
+}
+
 .input-group {
     display: flex;
     flex-direction: column;

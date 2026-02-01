@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#1a1a1a">
-    <meta name="mobile-web-app-capable" content="yes>
+    <meta name="description" content="Progressive interval timer for dog training with Dr. Karen Overall's 15-day relaxation protocol">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>meemtime</title>
     <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg">
@@ -12,6 +13,11 @@
     <link rel="shortcut icon" href="./icons/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
     <link rel="manifest" href="./manifest.json">
+    <!-- Preload critical assets -->
+    <link rel="preload" href="./icons/web-app-manifest-192x192.png" as="image">
+    <link rel="preload" href="./css/styles.css" as="style">
+    <link rel="preload" href="./css/relaxation.css" as="style">
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
@@ -32,6 +38,7 @@
     <!-- Home Screen (Mode Selector) -->
     <div class="screen home-screen active" id="home-screen">
         <div class="home-content">
+            <img src="./icons/web-app-manifest-192x192.png" alt="meemtime logo" class="home-logo">
             <h1>meemtime</h1>
             <div class="mode-buttons">
                 <button class="mode-btn" id="mode-interval">
