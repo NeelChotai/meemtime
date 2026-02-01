@@ -39,7 +39,7 @@
   }
 
   /**
-   * Trigger completion feedback (flash + vibrate)
+   * Trigger completion feedback (flash + vibrate + sound)
    */
   function triggerFeedback() {
     // Flash
@@ -56,6 +56,9 @@
     if (vibrateEnabled && navigator.vibrate) {
       navigator.vibrate(100);
     }
+
+    // Sound
+    window.SoundModule.playNotificationSound();
   }
 
   /**

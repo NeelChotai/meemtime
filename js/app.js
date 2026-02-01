@@ -42,9 +42,15 @@ const roundHistoryContainer = document.getElementById('round-history');
 // Settings elements
 const settingsToggle = document.getElementById('settings-toggle');
 const settingsToggleTraining = document.getElementById('settings-toggle-training');
+const settingsToggleHome = document.getElementById('settings-toggle-home');
+const settingsToggleRelaxDay = document.getElementById('settings-toggle-relax-day');
+const settingsToggleRelaxTips = document.getElementById('settings-toggle-relax-tips');
+const settingsToggleRelaxTask = document.getElementById('settings-toggle-relax-task');
+const settingsToggleRelaxTimer = document.getElementById('settings-toggle-relax-timer');
 const settingsPanel = document.getElementById('settings-panel');
 const vibrateToggle = document.getElementById('vibrate-toggle');
 const flashColorContainer = document.getElementById('flash-color');
+const notificationSoundContainer = document.getElementById('notification-sound');
 
 // Input elements
 const baselineMinInput = document.getElementById('baseline-min');
@@ -84,7 +90,7 @@ function formatMs(ms) {
     return `.${fraction.toString().padStart(2, '0')}`;
 }
 
-// Flash screen and vibrate
+// Flash screen, vibrate, and play sound
 function triggerFlash() {
     if (flashColor !== 'off') {
         flash.style.background = flashColor;
@@ -96,19 +102,34 @@ function triggerFlash() {
     if (vibrateEnabled && navigator.vibrate) {
         navigator.vibrate(100);
     }
+
+    window.SoundModule.playNotificationSound();
 }
+
+// All settings toggles
+const allSettingsToggles = [
+    settingsToggle,
+    settingsToggleTraining,
+    settingsToggleHome,
+    settingsToggleRelaxDay,
+    settingsToggleRelaxTips,
+    settingsToggleRelaxTask,
+    settingsToggleRelaxTimer
+];
 
 // Settings functions
 function toggleSettings() {
     const isHidden = settingsPanel.classList.toggle('hidden');
-    settingsToggle.classList.toggle('active', !isHidden);
-    settingsToggleTraining.classList.toggle('active', !isHidden);
+    allSettingsToggles.forEach(toggle => {
+        if (toggle) toggle.classList.toggle('active', !isHidden);
+    });
 }
 
 function closeSettings() {
     settingsPanel.classList.add('hidden');
-    settingsToggle.classList.remove('active');
-    settingsToggleTraining.classList.remove('active');
+    allSettingsToggles.forEach(toggle => {
+        if (toggle) toggle.classList.remove('active');
+    });
 }
 
 function setFlashColor(color) {
@@ -143,6 +164,10 @@ function loadSettings() {
         vibrateEnabled = true;
         vibrateToggle.checked = true;
     }
+
+    // Load sound settings
+    window.SoundModule.preloadSounds();
+    window.SoundModule.loadSoundSetting();
 }
 
 // Update session timer display
@@ -389,12 +414,18 @@ function init() {
     setupBackBtn.addEventListener('click', goToHome);
 
     // Settings event listeners
-    settingsToggle.addEventListener('click', toggleSettings);
-    settingsToggleTraining.addEventListener('click', toggleSettings);
+    allSettingsToggles.forEach(toggle => {
+        if (toggle) toggle.addEventListener('click', toggleSettings);
+    });
     vibrateToggle.addEventListener('change', (e) => setVibrate(e.target.checked));
     flashColorContainer.addEventListener('click', (e) => {
         if (e.target.dataset.color) {
             setFlashColor(e.target.dataset.color);
+        }
+    });
+    notificationSoundContainer.addEventListener('click', (e) => {
+        if (e.target.dataset.sound) {
+            window.SoundModule.setNotificationSound(e.target.dataset.sound);
         }
     });
 
@@ -402,8 +433,7 @@ function init() {
     document.addEventListener('click', (e) => {
         if (!settingsPanel.classList.contains('hidden') &&
             !settingsPanel.contains(e.target) &&
-            !settingsToggle.contains(e.target) &&
-            !settingsToggleTraining.contains(e.target)) {
+            !allSettingsToggles.some(toggle => toggle && toggle.contains(e.target))) {
             closeSettings();
         }
     });
