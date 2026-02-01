@@ -13,16 +13,25 @@
    * Tips content extracted from the protocol introduction
    */
   const TIPS_CONTENT = {
-    foodTreats: {
-      title: "About Food Treats",
+    about: {
+      title: "About the Relaxation Protocol (Tier 1)",
       points: [
-        "Foods high in protein may help induce brain chemistry changes that help the dog relax",
-        "Dogs should not have chocolate - it can be toxic",
-        "Some dogs do not do well with treats containing artificial colors or preservatives",
-        "Treats should be tiny (less than half the size of a thumbnail) so the dog does not get full, fat, or bored",
-        "Suggestions: boiled, slivered chicken or tiny pieces of cheese",
-        "Dog biscuits are generally not sufficient motivation",
-        "If the dog stops responding for one kind of treat, try another",
+        "The Relaxation Protocol is a 15-day program developed by Dr. Karen Overall in Clinical Behavioural Medicine for Small Animals (1997).",
+        "Its purpose is to help dogs learn to relax and stay calm in a variety of situations, from very reassuring ones with you present to potentially more stressful ones when you are absent.",
+        "It is important to be calm. Your dog will make mistakes. This does not reflect on you. Problem dogs and new puppies require a lot of patience.",
+      ],
+    },
+    protocolGuidelines: {
+      title: "Protocol Guidelines",
+      points: [
+        "Every family member should work daily with the pet if possible",
+        "It's less anxiety-provoking to do three or four 5-minute segments than one long session",
+        "Work only as long as both you and the dog are enjoying it",
+        "Do NOT end on a bad note - if behavior deteriorates, do one final easy exercise and stop",
+        "Before starting, practice until the dog can sit perfectly for 15 seconds without moving",
+        "Reward ONLY for performing each task perfectly",
+        "If behavior gets worse for 3-7 days, this is normal - stick with it",
+        "When mastered in one location, repeat in other rooms and circumstances",
       ],
     },
     rewardProcess: {
@@ -41,24 +50,21 @@
       points: [
         "If your pet gets up as you approach with the treat, ask yourself if you were too far away - move closer so they can reach the treat just by stretching their neck without getting up",
         "For small dogs or kittens, you may need to squat down",
-        "If you are close enough and your pet still gets up, close your hand over the treat and softly say \"No\"",
-        "Then gently ask your pet to \"sit\" again",
-        "After they sit, say \"stay,\" wait 3-5 seconds, say \"stay\" again, THEN immediately give the treat",
-        "The two \"stays\" with time between them reinforce that getting up is not part of the rewarded behavior",
+        'If you are close enough and your pet still gets up, close your hand over the treat and softly say "No"',
+        'Then gently ask your pet to "sit" again',
+        'After they sit, say "stay," wait 3-5 seconds, say "stay" again, THEN immediately give the treat',
+        'The two "stays" with time between them reinforce that getting up is not part of the rewarded behavior',
         "This teaches that whenever they make a mistake, they must do two things to recover from it",
       ],
     },
-    protocolGuidelines: {
-      title: "Protocol Guidelines",
+    futureRepetitions: {
+      title: "Future Repetitions",
       points: [
-        "Every family member should work daily with the pet if possible",
-        "It's less anxiety-provoking to do three or four 5-minute segments than one long session",
-        "Work only as long as both you and the dog are enjoying it",
-        "Do NOT end on a bad note - if behavior deteriorates, do one final easy exercise and stop",
-        "Before starting, practice until the dog can sit perfectly for 15 seconds without moving",
-        "Reward ONLY for performing each task perfectly",
-        "If behavior gets worse for 3-7 days, this is normal - stick with it",
-        "When mastered in one location, repeat in other rooms and circumstances",
+        "Once your pet can perform all tasks on- and off-lead in one location (e.g., living room), repeat in other rooms and circumstances",
+        "Use a lead in outdoor locations like the backyard or park",
+        "Repeat all tasks with all family members",
+        "Repeat all tasks with only every second or third task being rewarded with a treat (remember praise!)",
+        "Repeat with only intermittent treat reinforcement (remember praise!)",
       ],
     },
     anxietySigns: {
@@ -71,16 +77,6 @@
         "Trembling",
         "Scanning",
         "If you see these signs, return to an easier exercise or break it into smaller steps",
-      ],
-    },
-    futureRepetitions: {
-      title: "Future Repetitions",
-      points: [
-        "Once your pet can perform all tasks on- and off-lead in one location (e.g., living room), repeat in other rooms and circumstances",
-        "Use a lead in outdoor locations like the backyard or park",
-        "Repeat all tasks with all family members",
-        "Repeat all tasks with only every second or third task being rewarded with a treat (remember praise!)",
-        "Repeat with only intermittent treat reinforcement (remember praise!)",
       ],
     },
     exampleSequence: {

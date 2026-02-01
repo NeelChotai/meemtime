@@ -39,7 +39,7 @@
   }
 
   /**
-   * Trigger completion feedback (flash + vibrate)
+   * Trigger completion feedback (flash + vibrate + sound)
    */
   function triggerFeedback() {
     // Flash
@@ -52,10 +52,13 @@
     }
 
     // Vibrate
-    const vibrateEnabled = localStorage.getItem("meemtime-vibrate") === "true";
-    if (vibrateEnabled && navigator.vibrate) {
-      navigator.vibrate(100);
+    const vibrateEnabled = localStorage.getItem("meemtime-vibrate") !== "false";
+    if (vibrateEnabled) {
+      window.HapticModule.trigger();
     }
+
+    // Sound
+    window.SoundModule.playNotificationSound();
   }
 
   /**

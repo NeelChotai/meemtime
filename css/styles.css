@@ -96,6 +96,16 @@ h1 {
     position: relative;
 }
 
+.home-header {
+    position: absolute;
+    top: max(1rem, env(safe-area-inset-top));
+    left: max(1rem, env(safe-area-inset-left));
+    right: max(1rem, env(safe-area-inset-right));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .home-content {
     text-align: center;
 }
@@ -366,6 +376,44 @@ label {
 }
 
 .color-swatches button:active {
+    transform: scale(0.9);
+}
+
+/* Sound swatches */
+.sound-swatches {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.sound-swatches button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.1s, border-color 0.15s;
+    background: var(--bg);
+    font-size: 0.875rem;
+    line-height: 24px;
+    text-align: center;
+    padding: 0;
+}
+
+.sound-swatches button[data-sound="dog-clicker"]::before { content: '\1F514'; }
+.sound-swatches button[data-sound="anime-cute"]::before { content: '\2728'; }
+.sound-swatches button[data-sound="apple-pay"]::before { content: '\1F3B5'; }
+.sound-swatches button[data-sound="good-job"]::before { content: '\1F389'; }
+
+.sound-swatches button.sound-random::before { content: '\1F3B2'; }
+
+.sound-swatches button.sound-off::before { content: '\1F6AB'; }
+
+.sound-swatches button.selected {
+    border-color: var(--text);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text);
+}
+
+.sound-swatches button:active {
     transform: scale(0.9);
 }
 
