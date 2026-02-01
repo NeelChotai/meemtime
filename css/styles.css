@@ -92,6 +92,34 @@ h1 {
     margin-bottom: 0.5rem;
 }
 
+.home-screen {
+    position: relative;
+}
+
+.home-content {
+    text-align: center;
+}
+
+.home-footer {
+    position: absolute;
+    bottom: max(1.5rem, env(safe-area-inset-bottom));
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.home-footer a {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.home-footer a:hover {
+    opacity: 1;
+}
+
 .home-logo {
     width: 96px;
     height: 96px;
@@ -512,4 +540,96 @@ label {
 
 .fail-message.hidden {
     display: none;
+}
+
+/* Install Button */
+.install-btn {
+    display: none;
+    margin: 1.5rem auto 0;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.875rem;
+}
+
+/* Install Modal */
+.install-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.install-modal.active {
+    display: flex;
+}
+
+.install-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.install-modal-content {
+    position: relative;
+    background: var(--surface);
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 320px;
+    width: calc(100% - 2rem);
+    margin: 1rem;
+}
+
+.install-modal-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    line-height: 1;
+}
+
+.install-modal-close:hover {
+    color: var(--text);
+}
+
+.install-modal-content h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.install-modal-content p {
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+}
+
+.install-modal-content ol {
+    padding-left: 1.25rem;
+    color: var(--text);
+}
+
+.install-modal-content li {
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.install-modal-content strong {
+    color: var(--accent);
+}
+
+.share-icon::before {
+    content: '\2191';
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    line-height: 1.5rem;
+    text-align: center;
+    background: var(--bg);
+    border-radius: 0.25rem;
+    margin-left: 0.25rem;
+    font-size: 0.875rem;
 }

@@ -1,236 +1,397 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1a1a1a">
-    <meta name="description" content="Progressive interval timer for dog training with Dr. Karen Overall's 15-day relaxation protocol">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta
+      name="description"
+      content="Progressive interval timer for dog training with Dr. Karen Overall's 15-day relaxation protocol"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
     <title>meemtime</title>
-    <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg">
-    <link rel="icon" type="image/png" sizes="96x96" href="./icons/favicon-96x96.png">
-    <link rel="shortcut icon" href="./icons/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon.png">
-    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="./icons/favicon-96x96.png"
+    />
+    <link rel="shortcut icon" href="./icons/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./icons/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="./manifest.json" />
     <!-- Preload critical assets -->
-    <link rel="preload" href="./icons/web-app-manifest-192x192.png" as="image">
-    <link rel="preload" href="./css/styles.css" as="style">
-    <link rel="preload" href="./css/relaxation.css" as="style">
+    <link
+      rel="preload"
+      href="./icons/web-app-manifest-192x192.png"
+      as="image"
+    />
+    <link rel="preload" href="./css/styles.css" as="style" />
+    <link rel="preload" href="./css/relaxation.css" as="style" />
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/styles.css">
-    <link rel="stylesheet" href="./css/relaxation.css">
-</head>
-<body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/relaxation.css" />
+  </head>
+  <body>
     <div class="flash" id="flash"></div>
 
     <!-- SVG Sprites -->
-    <svg style="display: none;">
-        <symbol id="icon-cog" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-            <circle cx="12" cy="12" r="3"/>
-        </symbol>
+    <svg style="display: none">
+      <symbol
+        id="icon-cog"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+        />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
     </svg>
 
     <!-- Home Screen (Mode Selector) -->
     <div class="screen home-screen active" id="home-screen">
-        <div class="home-content">
-            <img src="./icons/web-app-manifest-192x192.png" alt="meemtime logo" class="home-logo">
-            <h1>meemtime</h1>
-            <div class="mode-buttons">
-                <button class="mode-btn" id="mode-interval">
-                    <span class="mode-title">Interval Timer</span>
-                    <span class="mode-desc">Progressive stay training</span>
-                </button>
-                <button class="mode-btn" id="mode-relax">
-                    <span class="mode-title">Relaxation Protocol</span>
-                    <span class="mode-desc">15-day guided program</span>
-                </button>
-            </div>
+      <div class="home-content">
+        <img
+          src="./icons/web-app-manifest-192x192.png"
+          alt="meemtime logo"
+          class="home-logo"
+        />
+        <h1>meemtime</h1>
+        <div class="mode-buttons">
+          <button class="mode-btn" id="mode-interval">
+            <span class="mode-title">Interval Timer</span>
+            <span class="mode-desc">Progressive stay training</span>
+          </button>
+          <button class="mode-btn" id="mode-relax">
+            <span class="mode-title">Relaxation Protocol</span>
+            <span class="mode-desc"
+              >15-day guided program by Dr. Karen Overall</span
+            >
+          </button>
         </div>
+        <button class="btn btn-ghost install-btn" id="install-btn">
+          Install App
+        </button>
+      </div>
+      <footer class="home-footer">
+        <a href="https://github.com/NeelChotai/meemtime" target="_blank" rel="noopener">GitHub</a>
+      </footer>
     </div>
 
     <!-- Setup Screen (Interval Timer) -->
     <div class="screen setup-screen" id="setup-screen">
-        <div class="setup-header">
-            <button class="btn btn-ghost back-btn" id="setup-back-home">&#8592; Back</button>
-            <button class="settings-toggle" id="settings-toggle" type="button" aria-label="Settings">
-                <svg width="20" height="20"><use href="#icon-cog"/></svg>
-            </button>
-        </div>
-        <div class="setup-content">
-            <h1>meemtime</h1>
+      <div class="setup-header">
+        <button class="btn btn-ghost back-btn" id="setup-back-home">
+          &#8592; Back
+        </button>
+        <button
+          class="settings-toggle"
+          id="settings-toggle"
+          type="button"
+          aria-label="Settings"
+        >
+          <svg width="20" height="20"><use href="#icon-cog" /></svg>
+        </button>
+      </div>
+      <div class="setup-content">
+        <h1>meemtime</h1>
 
-            <div class="input-group">
-                <label>Baseline Duration</label>
-                <div class="time-inputs">
-                    <div class="time-input">
-                        <input type="number" id="baseline-min" value="0" min="0" max="59" inputmode="numeric">
-                        <span>min</span>
-                    </div>
-                    <span class="time-separator">:</span>
-                    <div class="time-input">
-                        <input type="number" id="baseline-sec" value="30" min="0" max="59" inputmode="numeric">
-                        <span>sec</span>
-                    </div>
-                </div>
+        <div class="input-group">
+          <label>Baseline Duration</label>
+          <div class="time-inputs">
+            <div class="time-input">
+              <input
+                type="number"
+                id="baseline-min"
+                value="0"
+                min="0"
+                max="59"
+                inputmode="numeric"
+              />
+              <span>min</span>
             </div>
-
-            <div class="input-group">
-                <label>Interval Increment</label>
-                <div class="time-inputs">
-                    <div class="time-input">
-                        <input type="number" id="interval-min" value="0" min="0" max="59" inputmode="numeric">
-                        <span>min</span>
-                    </div>
-                    <span class="time-separator">:</span>
-                    <div class="time-input">
-                        <input type="number" id="interval-sec" value="10" min="0" max="59" inputmode="numeric">
-                        <span>sec</span>
-                    </div>
-                </div>
+            <span class="time-separator">:</span>
+            <div class="time-input">
+              <input
+                type="number"
+                id="baseline-sec"
+                value="30"
+                min="0"
+                max="59"
+                inputmode="numeric"
+              />
+              <span>sec</span>
             </div>
-
-            <button class="btn btn-primary" id="start-training">Start Training</button>
+          </div>
         </div>
+
+        <div class="input-group">
+          <label>Interval Increment</label>
+          <div class="time-inputs">
+            <div class="time-input">
+              <input
+                type="number"
+                id="interval-min"
+                value="0"
+                min="0"
+                max="59"
+                inputmode="numeric"
+              />
+              <span>min</span>
+            </div>
+            <span class="time-separator">:</span>
+            <div class="time-input">
+              <input
+                type="number"
+                id="interval-sec"
+                value="10"
+                min="0"
+                max="59"
+                inputmode="numeric"
+              />
+              <span>sec</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="start-training">
+          Start Training
+        </button>
+      </div>
     </div>
 
     <!-- Training Screen -->
     <div class="screen training-screen" id="training-screen">
-        <div class="training-header">
-            <div class="session-timer" id="session-timer">0:00</div>
-            <div class="header-actions">
-                <button class="settings-toggle" id="settings-toggle-training" type="button" aria-label="Settings">
-                    <svg width="20" height="20"><use href="#icon-cog"/></svg>
-                </button>
-                <button class="btn btn-ghost end-btn" id="end-session">End</button>
-            </div>
+      <div class="training-header">
+        <div class="session-timer" id="session-timer">0:00</div>
+        <div class="header-actions">
+          <button
+            class="settings-toggle"
+            id="settings-toggle-training"
+            type="button"
+            aria-label="Settings"
+          >
+            <svg width="20" height="20"><use href="#icon-cog" /></svg>
+          </button>
+          <button class="btn btn-ghost end-btn" id="end-session">End</button>
         </div>
+      </div>
 
-        <div class="countdown-container">
-            <div class="round-info">Round <span id="round-num">1</span></div>
-            <div class="target-info">Target: <span id="target-display">0:30</span></div>
-            <div class="countdown-display">
-                <div class="countdown" id="countdown">0:30</div>
-                <div class="countdown-ms" id="countdown-ms">.00</div>
-            </div>
-            <div class="next-preview">next: <span id="next-target">--</span></div>
+      <div class="countdown-container">
+        <div class="round-info">Round <span id="round-num">1</span></div>
+        <div class="target-info">
+          Target: <span id="target-display">0:30</span>
         </div>
+        <div class="countdown-display">
+          <div class="countdown" id="countdown">0:30</div>
+          <div class="countdown-ms" id="countdown-ms">.00</div>
+        </div>
+        <div class="next-preview">next: <span id="next-target">--</span></div>
+      </div>
 
-        <p class="fail-message hidden" id="fail-message">Dog broke. Ready when you are.</p>
-        <div class="round-history" id="round-history">
-            <div class="round-history-empty">No rounds completed yet</div>
-        </div>
+      <p class="fail-message hidden" id="fail-message">
+        Dog broke. Ready when you are.
+      </p>
+      <div class="round-history" id="round-history">
+        <div class="round-history-empty">No rounds completed yet</div>
+      </div>
 
-        <button class="btn btn-primary resume-btn hidden" id="resume-btn">Resume</button>
-        <div class="button-row" id="button-row">
-            <button class="btn btn-fail" id="fail-btn">Fail</button>
-            <button class="btn btn-pause" id="pause-btn">Pause</button>
-        </div>
+      <button class="btn btn-primary resume-btn hidden" id="resume-btn">
+        Resume
+      </button>
+      <div class="button-row" id="button-row">
+        <button class="btn btn-fail" id="fail-btn">Fail</button>
+        <button class="btn btn-pause" id="pause-btn">Pause</button>
+      </div>
     </div>
 
     <!-- Settings Panel (shared) -->
     <div class="settings-panel hidden" id="settings-panel">
-        <label class="setting">
-            <span>Vibrate on round change</span>
-            <input type="checkbox" id="vibrate-toggle">
-            <span class="toggle-switch"></span>
-        </label>
-        <div class="setting">
-            <span>Flash colour</span>
-            <div class="color-swatches" id="flash-color">
-                <button type="button" data-color="#4ade80" class="selected" aria-label="Green"></button>
-                <button type="button" data-color="#3b82f6" aria-label="Blue"></button>
-                <button type="button" data-color="#a855f7" aria-label="Purple"></button>
-                <button type="button" data-color="#f97316" aria-label="Orange"></button>
-                <button type="button" data-color="off" aria-label="Off" class="color-off"></button>
-            </div>
+      <label class="setting">
+        <span>Vibrate on round change</span>
+        <input type="checkbox" id="vibrate-toggle" />
+        <span class="toggle-switch"></span>
+      </label>
+      <div class="setting">
+        <span>Flash colour</span>
+        <div class="color-swatches" id="flash-color">
+          <button
+            type="button"
+            data-color="#4ade80"
+            class="selected"
+            aria-label="Green"
+          ></button>
+          <button type="button" data-color="#3b82f6" aria-label="Blue"></button>
+          <button
+            type="button"
+            data-color="#a855f7"
+            aria-label="Purple"
+          ></button>
+          <button
+            type="button"
+            data-color="#f97316"
+            aria-label="Orange"
+          ></button>
+          <button
+            type="button"
+            data-color="off"
+            aria-label="Off"
+            class="color-off"
+          ></button>
         </div>
+      </div>
     </div>
 
     <!-- Relaxation Protocol: Day Selector -->
     <div class="screen relax-screen" id="relax-day-screen">
-        <div class="relax-header">
-            <button class="btn btn-ghost back-btn" id="relax-back-home">&#8592; Back</button>
-            <div class="header-title">
-                <h1>Relaxation Protocol</h1>
-                <a class="header-attribution" href="https://www.karenoverall.com/" target="_blank" rel="noopener">by Dr. Karen Overall</a>
-            </div>
-            <button class="btn btn-ghost header-btn" id="relax-tips-btn">Tips</button>
+      <div class="relax-header">
+        <button class="btn btn-ghost back-btn" id="relax-back-home">
+          &#8592; Back
+        </button>
+        <div class="header-title">
+          <h1>Relaxation Protocol</h1>
+          <a
+            class="header-attribution"
+            href="https://www.karenoverall.com/"
+            target="_blank"
+            rel="noopener"
+            >by Dr. Karen Overall</a
+          >
         </div>
-        <div class="day-selector-content">
-            <div class="day-grid" id="relax-day-grid">
-                <!-- Days rendered by JS -->
-            </div>
+        <button class="btn btn-ghost header-btn" id="relax-tips-btn">
+          Tips
+        </button>
+      </div>
+      <div class="day-selector-content">
+        <div class="day-grid" id="relax-day-grid">
+          <!-- Days rendered by JS -->
         </div>
+      </div>
     </div>
 
     <!-- Relaxation Protocol: Tips Page -->
     <div class="screen relax-screen" id="relax-tips-screen">
-        <div class="relax-header">
-            <button class="btn btn-ghost back-btn" id="relax-tips-back">&#8592; Back</button>
-            <h1>Tips &amp; Guidelines</h1>
-            <span></span>
-        </div>
-        <div class="tips-content" id="relax-tips-content">
-            <!-- Tips content rendered by JS -->
-        </div>
+      <div class="relax-header">
+        <button class="btn btn-ghost back-btn" id="relax-tips-back">
+          &#8592; Back
+        </button>
+        <h1>Tips &amp; Guidelines</h1>
+        <span></span>
+      </div>
+      <div class="tips-content" id="relax-tips-content">
+        <!-- Tips content rendered by JS -->
+      </div>
     </div>
 
     <!-- Relaxation Protocol: Task List -->
     <div class="screen relax-screen" id="relax-task-screen">
-        <div class="relax-header">
-            <button class="btn btn-ghost back-btn" id="relax-task-back">&#8592; Days</button>
-            <h1 id="relax-task-title">Day 1</h1>
-            <span></span>
+      <div class="relax-header">
+        <button class="btn btn-ghost back-btn" id="relax-task-back">
+          &#8592; Days
+        </button>
+        <h1 id="relax-task-title">Day 1</h1>
+        <span></span>
+      </div>
+      <div class="task-list-content">
+        <div class="task-list" id="relax-task-list">
+          <!-- Tasks rendered by JS -->
         </div>
-        <div class="task-list-content">
-            <div class="task-list" id="relax-task-list">
-                <!-- Tasks rendered by JS -->
-            </div>
-        </div>
+      </div>
+    </div>
+
+    <!-- Install Modal (Safari/iOS instructions) -->
+    <div class="install-modal" id="install-modal">
+      <div class="install-modal-backdrop" id="install-modal-backdrop"></div>
+      <div class="install-modal-content">
+        <button class="install-modal-close" id="install-modal-close">
+          &times;
+        </button>
+        <h2>Install meemtime</h2>
+        <p>To install this app on your device:</p>
+        <ol>
+          <li>
+            Tap the <strong>Share</strong> button
+            <span class="share-icon"></span>
+          </li>
+          <li>Scroll down and tap <strong>Add to Home Screen</strong></li>
+        </ol>
+      </div>
     </div>
 
     <!-- Relaxation Protocol: Active Task View -->
     <div class="screen relax-screen" id="relax-timer-screen">
-        <div class="relax-header">
-            <button class="btn btn-ghost back-btn" id="relax-timer-back">&#8592; Tasks</button>
-            <span class="task-progress-label" id="relax-task-progress">Task 1 of 25</span>
-            <span></span>
-        </div>
+      <div class="relax-header">
+        <button class="btn btn-ghost back-btn" id="relax-timer-back">
+          &#8592; Tasks
+        </button>
+        <span class="task-progress-label" id="relax-task-progress"
+          >Task 1 of 25</span
+        >
+        <span></span>
+      </div>
 
-        <div class="task-view-content">
-            <p class="task-instruction" id="relax-task-instruction">
-                <!-- Task text displayed here -->
-            </p>
+      <div class="task-view-content">
+        <p class="task-instruction" id="relax-task-instruction">
+          <!-- Task text displayed here -->
+        </p>
 
-            <!-- Timer display (for timed tasks) -->
-            <div class="relax-timer-container" id="relax-timer-container">
-                <div class="relax-countdown-display">
-                    <div class="relax-countdown" id="relax-countdown">0:05</div>
-                    <div class="relax-countdown-ms" id="relax-countdown-ms">.00</div>
-                </div>
-                <div class="timer-controls" id="relax-timer-controls">
-                    <button class="btn btn-primary" id="relax-start-btn">Start</button>
-                    <button class="btn btn-pause hidden" id="relax-pause-btn">Pause</button>
-                    <button class="btn btn-primary hidden" id="relax-resume-btn">Resume</button>
-                    <button class="btn btn-ghost" id="relax-reset-btn">Reset</button>
-                </div>
-            </div>
-
-            <!-- Mark complete button (for non-timed tasks) -->
-            <button class="btn btn-primary mark-complete-btn hidden" id="relax-mark-complete">
-                Mark Complete
+        <!-- Timer display (for timed tasks) -->
+        <div class="relax-timer-container" id="relax-timer-container">
+          <div class="relax-countdown-display">
+            <div class="relax-countdown" id="relax-countdown">0:05</div>
+            <div class="relax-countdown-ms" id="relax-countdown-ms">.00</div>
+          </div>
+          <div class="timer-controls" id="relax-timer-controls">
+            <button class="btn btn-primary" id="relax-start-btn">Start</button>
+            <button class="btn btn-pause hidden" id="relax-pause-btn">
+              Pause
             </button>
+            <button class="btn btn-primary hidden" id="relax-resume-btn">
+              Resume
+            </button>
+            <button class="btn btn-ghost" id="relax-reset-btn">Reset</button>
+          </div>
         </div>
 
-        <div class="task-nav">
-            <button class="btn btn-ghost" id="relax-prev-btn">&#8592; Previous</button>
-            <button class="btn btn-primary" id="relax-next-btn">Next &#8594;</button>
-        </div>
+        <!-- Mark complete button (for non-timed tasks) -->
+        <button
+          class="btn btn-primary mark-complete-btn hidden"
+          id="relax-mark-complete"
+        >
+          Mark Complete
+        </button>
+      </div>
+
+      <div class="task-nav">
+        <button class="btn btn-ghost" id="relax-prev-btn">
+          &#8592; Previous
+        </button>
+        <button class="btn btn-primary" id="relax-next-btn">
+          Next &#8594;
+        </button>
+      </div>
     </div>
 
     <script src="./js/timer-logic.js"></script>
@@ -239,5 +400,6 @@
     <script src="./js/relaxation-logic.js"></script>
     <script src="./js/app.js"></script>
     <script src="./js/relaxation-app.js"></script>
-</body>
+    <script src="./js/install.js"></script>
+  </body>
 </html>
