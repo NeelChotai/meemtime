@@ -32,14 +32,25 @@
     }
 
     /**
+     * Get a random sound ID from available sounds
+     */
+    function getRandomSoundId() {
+        const soundIds = Object.keys(SOUNDS);
+        return soundIds[Math.floor(Math.random() * soundIds.length)];
+    }
+
+    /**
      * Play the current notification sound
      */
     function playNotificationSound() {
-        if (currentSound === 'off' || !audioCache[currentSound]) {
+        if (currentSound === 'off') {
             return;
         }
 
-        const audio = audioCache[currentSound];
+        const soundId = currentSound === 'random' ? getRandomSoundId() : currentSound;
+        const audio = audioCache[soundId];
+        if (!audio) return;
+
         // Reset to start if already playing
         audio.currentTime = 0;
         audio.play().catch(function(err) {
@@ -78,7 +89,7 @@
      */
     function loadSoundSetting() {
         const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved && (SOUNDS[saved] || saved === 'off')) {
+        if (saved && (SOUNDS[saved] || saved === 'off' || saved === 'random')) {
             currentSound = saved;
         } else {
             currentSound = DEFAULT_SOUND;

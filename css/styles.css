@@ -404,13 +404,9 @@ label {
 .sound-swatches button[data-sound="apple-pay"]::before { content: '\1F3B5'; }
 .sound-swatches button[data-sound="good-job"]::before { content: '\1F389'; }
 
-.sound-swatches button.sound-off {
-    position: relative;
-}
+.sound-swatches button.sound-random::before { content: '\1F3B2'; }
 
-.sound-swatches button.sound-off::before {
-    content: '\1F507';
-}
+.sound-swatches button.sound-off::before { content: '\1F6AB'; }
 
 .sound-swatches button.selected {
     border-color: var(--text);

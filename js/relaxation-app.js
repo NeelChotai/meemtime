@@ -52,9 +52,9 @@
     }
 
     // Vibrate
-    const vibrateEnabled = localStorage.getItem("meemtime-vibrate") === "true";
-    if (vibrateEnabled && navigator.vibrate) {
-      navigator.vibrate(100);
+    const vibrateEnabled = localStorage.getItem("meemtime-vibrate") !== "false";
+    if (vibrateEnabled) {
+      window.HapticModule.trigger();
     }
 
     // Sound

@@ -52,6 +52,11 @@
   <body>
     <div class="flash" id="flash"></div>
 
+    <!-- iOS haptic trigger (checkbox switch workaround) -->
+    <label id="___haptic-label___" style="position: absolute; left: -9999px; opacity: 0;">
+      <input type="checkbox" switch id="___haptic-switch___" name="haptic" />
+    </label>
+
     <!-- SVG Sprites -->
     <svg style="display: none">
       <symbol
@@ -107,7 +112,12 @@
         </button>
       </div>
       <footer class="home-footer">
-        <a href="https://github.com/NeelChotai/meemtime" target="_blank" rel="noopener">GitHub</a>
+        <a
+          href="https://github.com/NeelChotai/meemtime"
+          target="_blank"
+          rel="noopener"
+          >GitHub</a
+        >
       </footer>
     </div>
 
@@ -242,7 +252,7 @@
     <div class="settings-panel hidden" id="settings-panel">
       <label class="setting">
         <span>Vibrate on round change</span>
-        <input type="checkbox" id="vibrate-toggle" />
+        <input type="checkbox" id="vibrate-toggle" checked />
         <span class="toggle-switch"></span>
       </label>
       <div class="setting">
@@ -276,11 +286,39 @@
       <div class="setting">
         <span>Completion sound</span>
         <div class="sound-swatches" id="notification-sound">
-          <button type="button" data-sound="dog-clicker" class="selected" aria-label="Clicker"></button>
-          <button type="button" data-sound="anime-cute" aria-label="Anime"></button>
-          <button type="button" data-sound="apple-pay" aria-label="Chime"></button>
-          <button type="button" data-sound="good-job" aria-label="Good job"></button>
-          <button type="button" data-sound="off" aria-label="Off" class="sound-off"></button>
+          <button
+            type="button"
+            data-sound="dog-clicker"
+            class="selected"
+            aria-label="Clicker"
+          ></button>
+          <button
+            type="button"
+            data-sound="anime-cute"
+            aria-label="Anime"
+          ></button>
+          <button
+            type="button"
+            data-sound="apple-pay"
+            aria-label="Chime"
+          ></button>
+          <button
+            type="button"
+            data-sound="good-job"
+            aria-label="Good job"
+          ></button>
+          <button
+            type="button"
+            data-sound="random"
+            aria-label="Random"
+            class="sound-random"
+          ></button>
+          <button
+            type="button"
+            data-sound="off"
+            aria-label="Off"
+            class="sound-off"
+          ></button>
         </div>
       </div>
     </div>
@@ -450,6 +488,7 @@
     <script src="./js/timer-display.js"></script>
     <script src="./js/relaxation-data.js"></script>
     <script src="./js/relaxation-logic.js"></script>
+    <script src="./js/haptic.js"></script>
     <script src="./js/sound.js"></script>
     <script src="./js/app.js"></script>
     <script src="./js/relaxation-app.js"></script>

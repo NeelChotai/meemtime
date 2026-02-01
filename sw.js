@@ -1,4 +1,4 @@
-const CACHE_NAME = "meemtime-v20260201";
+const CACHE_NAME = "meemtime-v20260201-9";
 const ASSETS = [
   "./",
   "./index.html",
@@ -10,6 +10,8 @@ const ASSETS = [
   "./js/relaxation-data.js",
   "./js/relaxation-logic.js",
   "./js/relaxation-app.js",
+  "./js/sound.js",
+  "./js/haptic.js",
   "./manifest.json",
   "./icons/favicon.svg",
   "./icons/favicon-96x96.png",
@@ -17,6 +19,10 @@ const ASSETS = [
   "./icons/apple-touch-icon.png",
   "./icons/web-app-manifest-192x192.png",
   "./icons/web-app-manifest-512x512.png",
+  "./assets/sounds/dog-clicker.mp3",
+  "./assets/sounds/anime-cute-sound.mp3",
+  "./assets/sounds/apple-pay-sound.mp3",
+  "./assets/sounds/good-job.mp3",
 ];
 
 self.addEventListener("install", (event) => {
