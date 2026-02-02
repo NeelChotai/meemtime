@@ -1,7 +1,7 @@
 # meemtime
 [Meemtime web app](https://neelchotai.github.io/meemtime/)     
-A PWA interval timer for dog training. Helps build duration on "stay" commands with progressive intervals and randomized variance. Relaxation Protocol by Dr. Karen Overall with 15 task sets has been added, taken from her [website](https://www.karenoverall.com/) [here](https://www.karenoverall.com/wp-content/uploads/2020/06/Protocol-for-relaxation_Overall.pdf). 
-
+A PWA interval timer for dog training. Helps build duration on "stay" commands with progressive intervals and randomized variance. Relaxation Protocol by Dr. Karen Overall with 15 task sets has been added, taken from her [website](https://www.karenoverall.com/) [here](https://www.karenoverall.com/wp-content/uploads/2020/06/Protocol-for-relaxation_Overall.pdf).  
+Overall, K. L. (1997). Clinical Behavioral Medicine for Small Animals. Mosby.
 ## Features
 
 - **Progressive intervals**: Each round adds time to the previous target
