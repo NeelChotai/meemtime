@@ -156,6 +156,10 @@ h1 {
     align-items: center;
 }
 
+.home-header .settings-toggle {
+    margin-left: auto;
+}
+
 .home-content {
     text-align: center;
 }
