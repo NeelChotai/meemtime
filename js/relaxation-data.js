@@ -16,7 +16,7 @@
     about: {
       title: "About the Relaxation Protocol (Tier 1)",
       points: [
-        "The Relaxation Protocol is a 15-day program developed by Dr. Karen Overall in Clinical Behavioural Medicine for Small Animals (1997).",
+        "The Relaxation Protocol is a 15-day program developed by Dr. Karen Overall in Overall, K. L. (1997). Clinical Behavioral Medicine for Small Animals. Mosby.",
         "Its purpose is to help dogs learn to relax and stay calm in a variety of situations, from very reassuring ones with you present to potentially more stressful ones when you are absent.",
         "It is important to be calm. Your dog will make mistakes. This does not reflect on you. Problem dogs and new puppies require a lot of patience.",
         "You can train sit, down and stay as you prefer.",
