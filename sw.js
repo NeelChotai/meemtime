@@ -1,4 +1,4 @@
-const CACHE_NAME = "meemtime-v20260202-1";
+const CACHE_NAME = "meemtime-v20260202-17";
 const ASSETS = [
   "./",
   "./index.html",
@@ -30,7 +30,12 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)),
   );
-  self.skipWaiting();
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener("activate", (event) => {
