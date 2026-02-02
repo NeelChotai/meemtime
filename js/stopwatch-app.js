@@ -185,7 +185,7 @@
   }
 
   function updateInputsFromDuration(durationMs) {
-    const totalSec = Math.ceil(durationMs / 1000);
+    const totalSec = Math.floor(durationMs / 1000);
     const min = Math.floor(totalSec / 60);
     const sec = totalSec % 60;
     elements.minInput.value = min;
