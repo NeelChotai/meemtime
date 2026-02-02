@@ -57,6 +57,12 @@ const settingsToggleRelaxTask = document.getElementById(
 const settingsToggleRelaxTimer = document.getElementById(
   "settings-toggle-relax-timer",
 );
+const settingsToggleTestMode = document.getElementById(
+  "settings-toggle-test-mode",
+);
+const settingsToggleStopwatch = document.getElementById(
+  "settings-toggle-stopwatch",
+);
 const settingsPanel = document.getElementById("settings-panel");
 const vibrateToggle = document.getElementById("vibrate-toggle");
 const flashColorContainer = document.getElementById("flash-color");
@@ -126,6 +132,8 @@ const allSettingsToggles = [
   settingsToggleRelaxTips,
   settingsToggleRelaxTask,
   settingsToggleRelaxTimer,
+  settingsToggleTestMode,
+  settingsToggleStopwatch,
 ];
 
 // Settings functions

@@ -475,3 +475,343 @@
     background: var(--surface);
     border-radius: 2px;
 }
+
+/* Test Mode Screen */
+.test-mode-screen {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}
+
+.test-mode-screen.active {
+    display: flex;
+}
+
+.test-mode-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    gap: 0.5rem;
+}
+
+.test-mode-header h1 {
+    font-size: 1.125rem;
+    flex: 1;
+    text-align: center;
+}
+
+.test-mode-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    text-align: center;
+}
+
+.test-mode-instruction {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+    margin-bottom: 2rem;
+    max-width: 320px;
+}
+
+.test-mode-timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.test-mode-countdown-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.test-mode-countdown {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+}
+
+.test-mode-countdown-ms {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    color: var(--text-dim);
+}
+
+.test-mode-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.test-mode-controls .btn {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+}
+
+.test-mode-controls .btn.hidden {
+    display: none;
+}
+
+@media (max-width: 360px) {
+    .test-mode-countdown {
+        font-size: 4rem;
+    }
+
+    .test-mode-instruction {
+        font-size: 1rem;
+    }
+}
+
+/* Stopwatch Screen - Single screen with idle/running states */
+.stopwatch-screen {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+    padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}
+
+.stopwatch-screen.active {
+    display: flex;
+}
+
+.stopwatch-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    gap: 0.5rem;
+}
+
+.stopwatch-header h1 {
+    font-size: 1.125rem;
+    flex: 1;
+    text-align: center;
+}
+
+/* Main content area */
+.stopwatch-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 320px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Time display area */
+.stopwatch-time-area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Large editable time input */
+.stopwatch-time-input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+}
+
+.stopwatch-time-input.hidden {
+    display: none;
+}
+
+.stopwatch-input {
+    width: 5.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    padding: 0;
+    -moz-appearance: textfield;
+}
+
+.stopwatch-input::-webkit-outer-spin-button,
+.stopwatch-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.stopwatch-input:focus {
+    outline: none;
+    background: var(--surface);
+    border-radius: 0.5rem;
+}
+
+.stopwatch-input:disabled {
+    background: transparent;
+    color: var(--text);
+    opacity: 1;
+    -webkit-text-fill-color: var(--text);
+}
+
+.stopwatch-separator {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text-dim);
+}
+
+/* Time display container */
+.stopwatch-time-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Milliseconds display */
+.stopwatch-ms {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    color: var(--text-dim);
+}
+
+.stopwatch-ms.hidden {
+    display: none;
+}
+
+/* Start button */
+.stopwatch-start-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.125rem;
+}
+
+/* Presets section */
+.stopwatch-presets {
+    width: 100%;
+}
+
+.stopwatch-presets.hidden {
+    display: none;
+}
+
+.stopwatch-presets label {
+    display: block;
+    margin-bottom: 0.75rem;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.875rem;
+}
+
+.preset-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+}
+
+.preset-btn {
+    background: var(--surface);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.preset-btn:active {
+    transform: scale(0.98);
+    background: color-mix(in srgb, var(--accent) 20%, var(--surface));
+}
+
+/* Countdown display (running state) */
+.stopwatch-countdown-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stopwatch-countdown-display.hidden {
+    display: none;
+}
+
+.stopwatch-countdown {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+}
+
+.stopwatch-countdown-ms {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    color: var(--text-dim);
+}
+
+/* Controls area */
+.stopwatch-controls-area {
+    width: 100%;
+}
+
+.stopwatch-start-btn.hidden {
+    display: none;
+}
+
+/* Timer controls */
+.stopwatch-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.stopwatch-controls.hidden {
+    display: none;
+}
+
+.stopwatch-controls .btn {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+}
+
+.stopwatch-controls .btn.hidden {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 360px) {
+    .stopwatch-input {
+        width: 4.5rem;
+        font-size: 4rem;
+    }
+
+    .stopwatch-separator {
+        font-size: 4rem;
+    }
+
+    .stopwatch-countdown {
+        font-size: 4rem;
+    }
+
+    .preset-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

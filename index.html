@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#1a1a1a" />
     <meta
       name="description"
-      content="Progressive interval timer for dog training with Dr. Karen Overall's 15-day relaxation protocol"
+      content="Progressive interval timer for dog training with Dr. Karen Overall's 15-day relaxation protocol for reactive dogs and dogs with separation anxiety"
     />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta
@@ -53,7 +53,10 @@
     <div class="flash" id="flash"></div>
 
     <!-- iOS haptic trigger (checkbox switch workaround) -->
-    <label id="___haptic-label___" style="position: absolute; left: -9999px; opacity: 0;">
+    <label
+      id="___haptic-label___"
+      style="position: absolute; left: -9999px; opacity: 0"
+    >
       <input type="checkbox" switch id="___haptic-switch___" name="haptic" />
     </label>
 
@@ -95,15 +98,31 @@
           class="home-logo"
         />
         <h1>meemtime</h1>
+        <p class="home-tagline">
+          Choose a training mode below to get started. Adjust sound and
+          vibration in
+          <svg width="12" height="12"><use href="#icon-cog" /></svg> (top
+          right).
+        </p>
         <div class="mode-buttons">
           <button class="mode-btn" id="mode-interval">
             <span class="mode-title">Interval Timer</span>
-            <span class="mode-desc">Progressive stay training</span>
+            <span class="mode-desc"
+              >Build duration on "sit" and "down" commands with timed reward
+              intervals.</span
+            >
           </button>
           <button class="mode-btn" id="mode-relax">
             <span class="mode-title">Relaxation Protocol</span>
             <span class="mode-desc"
-              >15-day guided program by Dr. Karen Overall</span
+              >15-day program to help reactive dogs stay calm when you move,
+              make sounds, or leave the room</span
+            >
+          </button>
+          <button class="mode-btn" id="mode-stopwatch">
+            <span class="mode-title">Stopwatch</span>
+            <span class="mode-desc"
+              >Simple countdown timer with saved presets</span
             >
           </button>
         </div>
@@ -158,7 +177,7 @@
               <input
                 type="number"
                 id="baseline-sec"
-                value="30"
+                value="10"
                 min="0"
                 max="59"
                 inputmode="numeric"
@@ -187,7 +206,7 @@
               <input
                 type="number"
                 id="interval-sec"
-                value="10"
+                value="5"
                 min="0"
                 max="59"
                 inputmode="numeric"
@@ -484,6 +503,126 @@
       </div>
     </div>
 
+    <!-- Test Mode Screen -->
+    <div class="screen test-mode-screen" id="test-mode-screen">
+      <div class="test-mode-header">
+        <button class="btn btn-ghost back-btn" id="test-mode-back">
+          &#8592; Back
+        </button>
+        <h1>Test Mode</h1>
+        <button
+          class="settings-toggle"
+          id="settings-toggle-test-mode"
+          type="button"
+          aria-label="Settings"
+        >
+          <svg width="20" height="20"><use href="#icon-cog" /></svg>
+        </button>
+      </div>
+
+      <div class="test-mode-content">
+        <p class="test-mode-instruction">
+          Have your dog sit perfectly for 15 seconds without moving before
+          starting the relaxation protocol.
+        </p>
+
+        <div class="test-mode-timer-container">
+          <div class="test-mode-countdown-display">
+            <div class="test-mode-countdown" id="test-mode-countdown">0:15</div>
+            <div class="test-mode-countdown-ms" id="test-mode-countdown-ms">
+              .00
+            </div>
+          </div>
+          <div class="test-mode-controls">
+            <button class="btn btn-primary" id="test-mode-start-btn">
+              Start
+            </button>
+            <button class="btn btn-pause hidden" id="test-mode-pause-btn">
+              Pause
+            </button>
+            <button class="btn btn-primary hidden" id="test-mode-resume-btn">
+              Resume
+            </button>
+            <button class="btn btn-ghost" id="test-mode-restart-btn">
+              Restart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stopwatch Screen (single screen with idle/running states) -->
+    <div class="screen stopwatch-screen" id="stopwatch-screen">
+      <div class="stopwatch-header">
+        <button class="btn btn-ghost back-btn" id="stopwatch-back-home">
+          &#8592; Back
+        </button>
+        <h1>Stopwatch</h1>
+        <button
+          class="settings-toggle"
+          id="settings-toggle-stopwatch"
+          type="button"
+          aria-label="Settings"
+        >
+          <svg width="20" height="20"><use href="#icon-cog" /></svg>
+        </button>
+      </div>
+
+      <div class="stopwatch-content">
+        <!-- Time display: same inputs for editing and countdown -->
+        <div class="stopwatch-time-display">
+          <div class="stopwatch-time-input" id="stopwatch-time-input">
+            <input
+              type="number"
+              id="stopwatch-min"
+              value="0"
+              min="0"
+              max="59"
+              inputmode="numeric"
+              class="stopwatch-input"
+            />
+            <span class="stopwatch-separator">:</span>
+            <input
+              type="number"
+              id="stopwatch-sec"
+              value="05"
+              min="0"
+              max="59"
+              inputmode="numeric"
+              class="stopwatch-input"
+            />
+          </div>
+          <div class="stopwatch-ms hidden" id="stopwatch-ms">.00</div>
+        </div>
+
+        <!-- Quick Start Presets (always visible) -->
+        <div class="stopwatch-presets" id="stopwatch-default-presets">
+          <label>Quick Start</label>
+          <div class="preset-buttons" id="default-preset-buttons">
+            <!-- Default preset buttons rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Recent Presets (always visible if any) -->
+        <div class="stopwatch-presets hidden" id="stopwatch-recent-presets">
+          <label>Recent</label>
+          <div class="preset-buttons" id="recent-preset-buttons">
+            <!-- Recent preset buttons rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Controls: Start (idle) or Pause/Resume/Restart (running) -->
+        <div class="stopwatch-controls-area">
+          <button class="btn btn-primary stopwatch-start-btn" id="stopwatch-start">Start</button>
+          <div class="stopwatch-controls hidden" id="stopwatch-controls">
+            <button class="btn btn-pause" id="stopwatch-pause-btn">Pause</button>
+            <button class="btn btn-primary hidden" id="stopwatch-resume-btn">Resume</button>
+            <button class="btn btn-ghost" id="stopwatch-restart-btn">Restart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="./js/timer-logic.js"></script>
     <script src="./js/timer-display.js"></script>
     <script src="./js/relaxation-data.js"></script>
@@ -492,6 +631,7 @@
     <script src="./js/sound.js"></script>
     <script src="./js/app.js"></script>
     <script src="./js/relaxation-app.js"></script>
+    <script src="./js/stopwatch-app.js"></script>
     <script src="./js/install.js"></script>
   </body>
 </html>
