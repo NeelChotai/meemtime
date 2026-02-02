@@ -488,9 +488,57 @@ function init() {
   ensureInputDefaults();
   loadSettings();
 
-  // Register service worker
+  // Register service worker with update flow
   if ("serviceWorker" in navigator && location.protocol !== "file:") {
-    navigator.serviceWorker.register("./sw.js");
+    (async () => {
+      const registration = await navigator.serviceWorker.register("./sw.js");
+      const updateToast = document.getElementById("update-toast");
+      const updateBtn = document.getElementById("update-toast-btn");
+
+      const showUpdateToast = () => {
+        updateToast.classList.remove("hidden");
+      };
+
+      updateBtn.addEventListener("click", () => {
+        registration.waiting?.postMessage("SKIP_WAITING");
+      });
+
+      // Already a waiting SW (e.g., page was refreshed while update pending)
+      if (registration.waiting) {
+        showUpdateToast();
+      }
+
+      // Detect new SW being installed
+      registration.addEventListener("updatefound", () => {
+        const newWorker = registration.installing;
+        if (!newWorker) return;
+
+        newWorker.addEventListener("statechange", () => {
+          // New SW finished installing and is now waiting
+          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+            showUpdateToast();
+          }
+        });
+      });
+
+      // Reload when new SW takes control
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        window.location.reload();
+      });
+
+      // Check for updates immediately
+      registration.update();
+
+      // Check for updates periodically (every 5 minutes)
+      setInterval(() => registration.update(), 5 * 60 * 1000);
+
+      // Check for updates when page becomes visible
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          registration.update();
+        }
+      });
+    })();
   }
 }
 
