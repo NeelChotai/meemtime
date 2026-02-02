@@ -18,6 +18,10 @@
   let relaxProgress = null;
   let relaxSession = null;
   let relaxTimer = null;
+  let testModeTimer = null;
+
+  // Test mode constants
+  const TEST_MODE_DURATION = 15000; // 15 seconds
 
   // Elements cache
   const elements = {};
@@ -67,6 +71,20 @@
   function renderDaySelector() {
     const container = elements.dayGrid;
     container.innerHTML = "";
+
+    // Add test mode button first
+    const testBtn = document.createElement("button");
+    testBtn.className = "day-btn";
+    testBtn.id = "mode-test";
+    testBtn.innerHTML = `
+      <span class="day-number">Before starting</span>
+      <span class="day-desc">15-second sit test</span>
+    `;
+    testBtn.addEventListener("click", () => {
+      initTestModeScreen();
+      showScreen("test-mode-screen");
+    });
+    container.appendChild(testBtn);
 
     RELAXATION_DAYS.forEach((dayData) => {
       const btn = document.createElement("button");
@@ -429,6 +447,21 @@
     elements.tipsBack = document.getElementById("relax-tips-back");
     elements.taskBack = document.getElementById("relax-task-back");
     elements.timerBack = document.getElementById("relax-timer-back");
+
+    // Test mode elements
+    elements.testModeBack = document.getElementById("test-mode-back");
+    elements.testModeCountdown = document.getElementById("test-mode-countdown");
+    elements.testModeCountdownMs = document.getElementById(
+      "test-mode-countdown-ms",
+    );
+    elements.testModeStartBtn = document.getElementById("test-mode-start-btn");
+    elements.testModePauseBtn = document.getElementById("test-mode-pause-btn");
+    elements.testModeResumeBtn = document.getElementById(
+      "test-mode-resume-btn",
+    );
+    elements.testModeRestartBtn = document.getElementById(
+      "test-mode-restart-btn",
+    );
   }
 
   /**
@@ -462,6 +495,94 @@
     elements.markCompleteBtn.addEventListener("click", handleMarkComplete);
     elements.prevBtn.addEventListener("click", goToPreviousTask);
     elements.nextBtn.addEventListener("click", handleNextClick);
+
+    // Test mode controls
+    elements.testModeBack.addEventListener("click", handleTestModeBack);
+    elements.testModeStartBtn.addEventListener("click", handleTestModeStart);
+    elements.testModePauseBtn.addEventListener("click", handleTestModePause);
+    elements.testModeResumeBtn.addEventListener("click", handleTestModeResume);
+    elements.testModeRestartBtn.addEventListener(
+      "click",
+      handleTestModeRestart,
+    );
+  }
+
+  /**
+   * Initialize test mode screen
+   */
+  function initTestModeScreen() {
+    // Initialize timer display
+    testModeTimer = new TimerDisplay({
+      countdownElement: elements.testModeCountdown,
+      msElement: elements.testModeCountdownMs,
+      onComplete: handleTestModeComplete,
+    });
+    testModeTimer.setDisplay(TEST_MODE_DURATION);
+
+    // Reset button states
+    elements.testModeStartBtn.classList.remove("hidden");
+    elements.testModePauseBtn.classList.add("hidden");
+    elements.testModeResumeBtn.classList.add("hidden");
+  }
+
+  /**
+   * Handle test mode back button
+   */
+  function handleTestModeBack() {
+    if (testModeTimer) {
+      testModeTimer.stop();
+    }
+    showScreen("relax-day-screen");
+  }
+
+  /**
+   * Handle test mode start
+   */
+  function handleTestModeStart() {
+    testModeTimer.start(TEST_MODE_DURATION);
+    elements.testModeStartBtn.classList.add("hidden");
+    elements.testModePauseBtn.classList.remove("hidden");
+  }
+
+  /**
+   * Handle test mode pause
+   */
+  function handleTestModePause() {
+    testModeTimer.pause();
+    elements.testModePauseBtn.classList.add("hidden");
+    elements.testModeResumeBtn.classList.remove("hidden");
+  }
+
+  /**
+   * Handle test mode resume
+   */
+  function handleTestModeResume() {
+    testModeTimer.resume();
+    elements.testModeResumeBtn.classList.add("hidden");
+    elements.testModePauseBtn.classList.remove("hidden");
+  }
+
+  /**
+   * Handle test mode restart
+   */
+  function handleTestModeRestart() {
+    testModeTimer.reset();
+    testModeTimer.setDisplay(TEST_MODE_DURATION);
+    elements.testModePauseBtn.classList.add("hidden");
+    elements.testModeResumeBtn.classList.add("hidden");
+    elements.testModeStartBtn.classList.remove("hidden");
+  }
+
+  /**
+   * Handle test mode timer completion
+   */
+  function handleTestModeComplete() {
+    triggerFeedback();
+
+    // Reset button states after completion
+    elements.testModePauseBtn.classList.add("hidden");
+    elements.testModeResumeBtn.classList.add("hidden");
+    elements.testModeStartBtn.classList.remove("hidden");
   }
 
   /**

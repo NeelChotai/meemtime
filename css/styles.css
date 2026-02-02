@@ -110,6 +110,12 @@ h1 {
     text-align: center;
 }
 
+.home-tagline {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin: 0 0 1.5rem;
+}
+
 .home-footer {
     position: absolute;
     bottom: max(1.5rem, env(safe-area-inset-bottom));
