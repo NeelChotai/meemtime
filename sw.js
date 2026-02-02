@@ -1,4 +1,4 @@
-const CACHE_NAME = "meemtime-v20260201-9";
+const CACHE_NAME = "meemtime-v20260202-1";
 const ASSETS = [
   "./",
   "./index.html",
@@ -10,6 +10,7 @@ const ASSETS = [
   "./js/relaxation-data.js",
   "./js/relaxation-logic.js",
   "./js/relaxation-app.js",
+  "./js/stopwatch-app.js",
   "./js/sound.js",
   "./js/haptic.js",
   "./manifest.json",
